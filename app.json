@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Rekebisha",
+    "slug": "rekebishaApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/Logo.jpg",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/Logo.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/Logo.jpg",
+        "backgroundColor": "#FFFFFF"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB7EFvFzgS6PDOkhHshLII90oQ6L2rsELo"
+        }
+      },
+      "package": "com.whim.RekebishaApplicationClient",
+      "versionCode": 2
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
