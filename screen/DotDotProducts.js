@@ -25,7 +25,7 @@ const DotDotScreen = ({ navigation }) => {
 
 
             <ImageBackground
-                source={require('../assets/4k-background.png')}
+                source={require('../assets/IconlessBackground.jpg')}
                 resizeMode="cover"
                 style={styles.imageBackground}
             >
@@ -33,7 +33,7 @@ const DotDotScreen = ({ navigation }) => {
                 <View style={styles.banner}>
 
                     <Image
-                        source={require('../assets/4k-background.png')}
+                        source={require('../assets/DotDotBanner.jpg')}
                         style={styles.bannerimage}
                     // resizeMode="cover" 
                     />
@@ -96,7 +96,7 @@ const DotDotScreen = ({ navigation }) => {
 
                     <Card style={styles.offerProduct}>
                         <ImageBackground
-                            source={require('../assets/4k-background.png')}
+                            source={require('../assets/Product2.jpg')}
                             resizeMode="cover"
                             style={styles.imageBg}
                         >

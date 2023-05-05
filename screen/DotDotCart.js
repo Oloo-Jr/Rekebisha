@@ -25,7 +25,7 @@ const DotDotCart = ({ navigation }) => {
                 <View style={styles.banner}>
 
                     <Image
-                        source={require('../assets/4k-background.png')}
+                        source={require('../assets/DotDotBanner.jpg')}
                         style={styles.bannerimage}
                     // resizeMode="cover" 
                     />
