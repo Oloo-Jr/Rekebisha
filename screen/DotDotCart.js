@@ -117,9 +117,9 @@ const DotDotCart = ({ navigation }) => {
 
 
         <Card style={styles.acceptButton}>
-            <TouchableOpacity onPress={() => { navigation.navigate("DotGigScreen", { state: 0 }) }}>
+            <TouchableOpacity onPress={() => { navigation.navigate("DotDotCheckout", { state: 0 }) }}>
             <Text style={styles.text2c2}>
-                   Add to Cart
+                   Purchase this product
                 </Text>
             </TouchableOpacity>
         </Card>
@@ -191,7 +191,7 @@ const DotDotCart = ({ navigation }) => {
 
 
 
-                                            <TitleText style={styles.prodName}>ADD TO CART</TitleText>
+                                            <TitleText style={styles.prodName}>Add to Cart</TitleText>
 
 
 
