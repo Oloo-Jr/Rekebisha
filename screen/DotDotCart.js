@@ -222,7 +222,7 @@ const DotDotCart = ({ navigation, route }) => {
             <TouchableOpacity 
             onPress={BuyDotDotProduct}>
             <Text style={styles.text2c2}>
-            {isLoading ? "Loading..." : "Buy"}
+                   Add to Cart
                 </Text>
 
             </TouchableOpacity>
@@ -295,7 +295,7 @@ const DotDotCart = ({ navigation, route }) => {
 
 
 
-                                            <TitleText style={styles.prodName}>ADD TO CART</TitleText>
+                                            <TitleText style={styles.prodName}>Add to Cart</TitleText>
 
 
 
