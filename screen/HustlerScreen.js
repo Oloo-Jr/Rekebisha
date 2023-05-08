@@ -102,7 +102,7 @@ const HustlerScreen = ({ navigation }) => {
 
                                         <View style={styles.imageView}>
                                             <Image
-                                                source={require('../assets/logo.png')}
+                                                source={require('../assets/DotDotLogo.jpg')}
                                                 style={styles.image}
                                             // resizeMode="cover" 
                                             />

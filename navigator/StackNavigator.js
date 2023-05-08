@@ -14,6 +14,7 @@ import VendorMenuScreen from '../screen/VendorMenuScreen';
 import CheckoutScreen from '../screen/CheckoutScreen';
 import DotDotScreen from '../screen/DotDotProducts';
 import DotDotCart from '../screen/DotDotCart';
+import LoadingScreen from '../components/Loading';
 
 const Home = createNativeStackNavigator();
 
@@ -104,6 +105,11 @@ export function HomeStack() {
 <Home.Screen
                 name="DotDotCart"
                 component={DotDotCart}
+                options={{ headerShown: false }}
+            />
+            <Home.Screen
+                name="LoadingScreen"
+                component={LoadingScreen}
                 options={{ headerShown: false }}
             />
 

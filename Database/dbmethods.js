@@ -8,3 +8,5 @@ export const createUserDocument = (username, phonenumber) => {
         email: auth.currentUser.email
     })
 }
+
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, StyleSheet, Image, ImageBackground, FlatList, Text, TouchableOpacity } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
@@ -11,11 +11,23 @@ import { TextInput } from 'react-native-gesture-handler';
 
 const DotDotScreen = ({ navigation }) => {
 
+    const [Category, setCategory] = useState("FuelTreatment");
+    //Product 1
+    const [Quantity1, setQuantity1] = useState("7ml");
+    const [Price1, setPrice1] = useState("KES 1,000/-");
+    const [Description, setDescription] = useState("");
 
+    //Product 2
+    const [Quantity2, setQuantity2] = useState("240ml");
+    const [Price2, setPrice2] = useState("KES 24,000/-");
+    const [Description2, setDescription2] = useState("");
+    const [image2, setImage2] = useState(null);
 
+    const handleImageLoad = () => {
+        setImage2(require('../assets/DotDotProduct1.jpg'));
+      };
 
     return (
-
 
         <View style={styles.container}>
 
@@ -64,8 +76,6 @@ const DotDotScreen = ({ navigation }) => {
 
                         <Card style={styles.searchButton}>
                             <TitleText style={styles.prodVendor}>What are you looking for?</TitleText>
-
-
                             <Icon
                                 type="Ionicons"
                                 name="search"
@@ -96,19 +106,19 @@ const DotDotScreen = ({ navigation }) => {
 
                     <Card style={styles.offerProduct}>
                         <ImageBackground
-                            source={require('../assets/Product2.jpg')}
+                            source={require('../assets/DotDOtProduct2.jpg')}
                             resizeMode="cover"
                             style={styles.imageBg}
                         >
 
                             <View style={styles.sideView}>
-                                <TitleText style={styles.offerText}>Oils</TitleText>
-                                <TitleText style={styles.subText}>Super catalyst</TitleText>
-                                <TitleText style={styles.subText}>Kiambu road</TitleText>
+                                <TitleText style={styles.offerText}>{Category}</TitleText>
+                                <TitleText style={styles.subText}>Efficiamax</TitleText>
+                                <TitleText style={styles.subText}>Quantity: {Quantity1}</TitleText>
 
                                 <View style={styles.priceView}>
-                                    <Text style={styles.offerText1}>KES 300/-</Text>
-                                    <Text style={styles.subText1}>SAVE 100/-</Text>
+                                    <Text style={styles.offerText1}>{Price1}</Text>
+
                                 </View>
                             </View>
 
@@ -133,8 +143,9 @@ const DotDotScreen = ({ navigation }) => {
 
                             <View style={styles.imageView}>
                                 <Image
-                                    source={require('../assets/Product1.jpg')}
+                                    source={image2}
                                     style={styles.image}
+                                    onLoad={handleImageLoad}
                                 // resizeMode="cover" 
                                 />
 
@@ -145,29 +156,26 @@ const DotDotScreen = ({ navigation }) => {
 
                         <View style={styles.buyView}>
 
-                            <TitleText style={styles.prodName}>Catalyst 1</TitleText>
+                            <TitleText style={styles.prodName}>Efficiamax: {Category}</TitleText>
 
 
                             <View style={styles.BuyView}>
-                                <TitleText style={styles.prodName}>KES 500</TitleText>
+                                <TitleText style={styles.prodName}>Quantity: {Quantity2}</TitleText>
+                                
+                                <TitleText style={styles.prodName}>{Price2}</TitleText>
+
 
 
 
                                 <View style={styles.addtocart}>
                                     <View style={styles.buttonView}>
-                                        <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", { state: 0 }) }}>
-
-
-
-
+                                        <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
+                                        { currentQuantity2:Quantity2,
+                                                 currentPrice: Price2,
+                                                 currentImage: image2}) }}>
                                             <TitleText style={styles.prodName}>ADD TO CART</TitleText>
-
-
-
-
                                         </TouchableOpacity>
                                     </View>
-
                                 </View>
 
 
@@ -180,6 +188,8 @@ const DotDotScreen = ({ navigation }) => {
 
 
                     </Card>
+
+                    
 
                 </View>
 

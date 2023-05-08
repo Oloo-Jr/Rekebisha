@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Image, ImageBackground, FlatList, Text, TouchableOpacity } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
@@ -9,8 +9,70 @@ import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { db, auth } from '../Database/config';
+import * as Location from 'expo-location';
+import firebase from 'firebase';
 
-const DotDotCart = ({ navigation }) => {
+const DotDotCart = ({ navigation, route }) => {
+
+    const [currentQuantity, setCurrentQuantity] = useState(route.params.currentQuantity2);
+    const [currentPrice, setCurrentPrice] = useState(route.params.currentPrice);
+    const [currentImage, setCurrentImage] = useState(route.params.currentImage);
+    const [isButtonPressed, setIsButtonPressed] = useState(false);
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [userDisplayName, setUserDisplayName] = useState("");
+    const [userPhoneNumber, setUserPhoneNumber] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [taken, setTaken] = useState("No");
+
+    const getUserDetails = async () => {
+        const doc = await db.collection('users').doc(auth.currentUser.uid).get();
+        console.log(doc.data());
+        const username = doc.data().username;
+        const phoneNumber = doc.data().phonenumber;
+        setUserDisplayName(username);
+        setUserPhoneNumber(phoneNumber);
+    
+  }
+    const getLocation = async () => {
+        try {
+          const { granted } = await Location.requestBackgroundPermissionsAsync();
+          if (!granted) return;
+          const {
+            coords: { latitude, longitude },
+          } = await Location.getCurrentPositionAsync();
+          setLatitude(latitude)
+          setLongitude(longitude)
+        } catch (err) {
+    
+        }
+      }
+  
+      useEffect(() => {
+        getLocation();
+        getUserDetails();
+      }, [])
+      
+   const BuyDotDotProduct = () =>{
+    setIsLoading(true);
+         db.collection("DotDotOrders"). doc().set({
+            userDisplayName,
+            currentQuantity,
+            currentPrice,
+            longitude,
+            latitude,
+            userPhoneNumber,
+            uid: auth.currentUser.uid,
+            status: 'pending',
+            agentId: null,
+            TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+
+        //navigation
+        navigation.navigate('LoadingScreen');     
+    }
+
 
     return (
 
@@ -64,7 +126,7 @@ const DotDotCart = ({ navigation }) => {
 
 <View style={styles.cartprodImage}>
 <Image
-        source={require('../assets/Product1.jpg')}
+        source={currentImage}
         style={styles.bannerimage}
     // resizeMode="cover" 
     />
@@ -72,8 +134,8 @@ const DotDotCart = ({ navigation }) => {
 
 <View style={styles.orderDetails}>
     <View style={styles.textView}>
-        <Text style={styles.text12}>Catalyst 50ml</Text>
-        <Text style={styles.text22}>KES 1,200</Text>
+        <Text style={styles.text12}>Quantity: {currentQuantity}</Text>
+        <Text style={styles.text22}>{currentPrice}</Text>
     </View>
 
     
@@ -83,17 +145,57 @@ const DotDotCart = ({ navigation }) => {
 
         <View style={styles.textView2}>
             <MaterialIcons name="timer" size={24} color="red" />
-            <Text style={styles.text42}>10 - 15 mins</Text>
+            <Text style={styles.text42}>25 - 30 mins</Text>
         </View>
 
         <View style={styles.textView2}>
             
-            <Text  style={styles.text42}>Quantity</Text>
-
+           {/* <Text  style={styles.text42}>Quantity</Text>*/}
         </View>
 
 
     </View>
+    <View style={styles.textView}>
+       
+
+        <View   style={styles.textView2}>
+            <MaterialIcons onPress={() => setIsButtonPressed(true)} name="description" size={24} color="blue" />
+            <Text style={styles.text42}>Description</Text>
+            
+        </View>
+
+        <View style={styles.textView2}>
+            
+           {/* <Text  style={styles.text42}>Quantity</Text>*/}
+        </View>
+
+
+    </View>
+    <View style={styles.textView}>
+       
+
+       <View style={styles.textView2}>
+       {isButtonPressed &&
+       <Text style={styles.text42}>The Dalhin Efficiamax®Ten-35 fuel treatment is a
+                combustion catalyst that gives your engine greater
+                fuel efficiency. Our product decreases combustible
+                carbon residue by providing a more complete burn.
+                More efficient combustion yields to more useful power
+                per gallon of fuel.Dalhin Efficiamax® Ten-35 is the
+                ONLY fuel treatment in the world that reduces soot
+                and smoke and other harmful emissions a
+                guaranteed 40%, and in many cases much higher</Text>}
+           
+           
+       </View>
+
+       <View style={styles.textView2}>
+           
+          {/* <Text  style={styles.text42}>Quantity</Text>*/}
+       </View>
+
+
+   </View>
 
 
  
@@ -109,7 +211,7 @@ const DotDotCart = ({ navigation }) => {
 <View style={styles.textView}>
 
 <Text  style={styles.text2d2}>Total</Text>
-<Text style={styles.text2e2}>KES 1850</Text>
+<Text style={styles.text2e2}>{currentPrice}</Text>
 </View>
 
 
@@ -117,10 +219,12 @@ const DotDotCart = ({ navigation }) => {
 
 
         <Card style={styles.acceptButton}>
-            <TouchableOpacity onPress={() => { navigation.navigate("DotGigScreen", { state: 0 }) }}>
+            <TouchableOpacity 
+            onPress={BuyDotDotProduct}>
             <Text style={styles.text2c2}>
-                   Add to Cart
+            {isLoading ? "Loading..." : "Buy"}
                 </Text>
+
             </TouchableOpacity>
         </Card>
 
