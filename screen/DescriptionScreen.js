@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ImageBackground,Image, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -8,12 +8,109 @@ import { Icon } from 'react-native-elements'
 import BodyText from '../components/BodyText';
 import MapView, { PROVIDER_GOOGLE, } from 'react-native-maps';
 import * as Location from 'expo-location';
-
+import { db, storage, auth } from '../Database/config';
+import * as ImagePicker from 'expo-image-picker';
+import firebase from 'firebase';
 
 const DescriptionScreen = ({ navigation }) => {
 
     const [selected, setSelected] = useState("");
-    const [latlng, setLatLng] = useState({})
+    const [latlng, setLatLng] = useState({});
+    const [description, setDescription] = useState('');
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [address, setAddress] = useState('');
+    const [currentusername, setCurrentUsername] = useState('');
+    const [currentphonenumber, setCurrentPhonenumber] = useState('');
+    const [fundiId, setFundiId] = useState("")
+
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      
+        console.log(result);
+      
+        if (!result.cancelled) {
+          setImage(result.uri);
+          console.log(image)
+        }
+      };
+     
+      // Select an image from the device's gallery
+
+const uploadImage = async () => {
+  const currentuserProblem = Math.floor(100000+Math.random()*9000).toString();
+
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function() {
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', image, true);
+      xhr.send(null);
+    })
+    const serialNumber = Math.floor(100000+Math.random()*9000).toString()
+    const ref = storage.ref("DescriptionImages").child(serialNumber)
+    const snapshot = ref.put(blob)
+    snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
+      ()=>{
+        setUploading(true)
+      },
+      (error) => {
+        setUploading(false)
+        console.log(error)
+        blob.close()
+        return 
+      },
+      () => {
+        storage.ref("DescriptionImages")
+            .child(serialNumber)
+            .getDownloadURL()
+            .then((imageUrl)=>{
+              db.collection('FundiDescription')
+              .doc(serialNumber)
+              .set({
+                Category: selected,
+                Description: description,
+                Latitude: latitude,
+                Longitude: longitude,
+                Town: address,
+                Username: currentusername,
+                serialNumber,
+                imgUrl: imageUrl,
+                FundiId: fundiId,
+                TimeStamp:  firebase.firestore.FieldValue.serverTimestamp(),
+              })
+            })
+      }
+      )
+  
+      //Reset 
+      setDescription("");
+      setSelected(null);
+      setImage(null);
+      setLatitude("");
+      setLongitude("");
+      setLoading(true);
+  
+  
+      //Navigate
+      navigation.navigate("ListingScreen", {currentuserProblem: currentuserProblem});
+  }
+  
 
     const checkPermission = async () => {
       const hasPermission = await Location.requestForegroundPermissionsAsync();
@@ -38,6 +135,8 @@ const DescriptionScreen = ({ navigation }) => {
           coords: { latitude, longitude },
         } = await Location.getCurrentPositionAsync();
         setLatLng({ latitude: latitude, longitude: longitude })
+        setLatitude(latitude);
+        setLongitude(longitude);
       } catch (err) {
   
       }
@@ -45,18 +144,61 @@ const DescriptionScreen = ({ navigation }) => {
   
     const _map = useRef(1);
   
-    useEffect(() => {
-      checkPermission();
-      getLocation()
-      console.log(latlng)
-        , []
-    })
+      //run the functions in the background
+      useEffect(() => {
+        checkPermission();
+        getLocation();
+        geocode();
+        getUserDetails();
+        console.log([latitude, longitude])
+          , []
+      })
+       //Get the Town using Latitude and Longitude
+  const geocode = async () => {
+    const geocodedAddress = await Location.reverseGeocodeAsync({
+        longitude: longitude,
+        latitude: latitude
+    });
+    setAddress(geocodedAddress[0].city);
+    console.log('reverseGeocode:');
+    console.log(geocodedAddress[0].city);
 
+}
+
+//Get the current user Profile details.
+const getUserDetails = async () => {
+  const doc = await db.collection('users').doc(auth.currentUser.uid).get();
+  console.log(doc.data());
+  const Username = doc.data().username;
+  const Phonenumber = doc.data().phonenumber;
+  setCurrentUsername(Username);
+  setCurrentPhonenumber(Phonenumber);
+
+}
   
     const data = [
         { key: '1', value: 'Mason', disabled: true },
         { key: '2', value: 'Electrician' },
         { key: '3', value: 'Plumber' },
+        {key: '4 ', value:'Construction Equipment Operator'},
+        {key: ' 5', value:'Carpenter'},
+        {key: ' 6', value:'Electrician'},
+        {key: ' 7', value:'Plumber'},
+        {key: ' 8' ,value:'Welder'},
+        {key: ' 9' ,value:'Locks and Doors'},
+        {key: ' 10' ,value:'Roofer' },
+        {key: ' 11' ,value:'Tiler'},
+        {key: ' 12' ,value:'Terrazzo'},
+        {key: ' 13' ,value:'Mason'},
+        {key: ' 14' ,value:'Landscaper'},
+        {key: ' 15' ,value:'Window/Glass/Mirror Fixer'},
+        {key: ' 16' ,value:'Plasterer'},
+        {key: ' 17' ,value:'Gypsum expert'},
+        {key: ' 18' ,value:'Floor carpet layer'},
+        {key: ' 19' ,value:'Waterproofing'},
+        {key: ' 20' ,value:'Cladding/Mazeras'},
+        {key: ' 21' ,value:'External paver'},
+        {key: ' 22' ,value:'Parking Sheds'}
 
     ]
 
@@ -124,7 +266,8 @@ const DescriptionScreen = ({ navigation }) => {
                     <BodyText style={styles.Text}>Description of your problem</BodyText>
                     <TextInput
                         style={styles.input}
-
+                        value={description}
+                        onChangeText={(text) => setDescription(text)}
                         multiline
                         placeholder="Description"
 
@@ -135,22 +278,19 @@ const DescriptionScreen = ({ navigation }) => {
 
 
                     <View style={styles.imageview}>
-
+                    {image && <Image source={{uri: image.uri}} style = {{with: 100, height: 100}} />}
                     </View>
 
                     <Card style={styles.button}>
-
-
-
+                    <TouchableOpacity onPress={pickImage}>
                         <TitleText style={styles.Text}>Upload</TitleText>
-
-
+                    </TouchableOpacity>
                     </Card>
 
 
 
                     <View style={styles.buttonView}>
-                        <TouchableOpacity onPress={() => { navigation.navigate("ListingScreen", { state: 0 }) }}>
+                        <TouchableOpacity onPress={uploadImage}>
 
                             <Card style={styles.submitbutton}>
 

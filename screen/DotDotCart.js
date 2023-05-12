@@ -56,7 +56,8 @@ const DotDotCart = ({ navigation, route }) => {
       
    const BuyDotDotProduct = () =>{
     setIsLoading(true);
-         db.collection("DotDotOrders"). doc().set({
+      const currentOrderId = Math.floor(100000+Math.random()*9000).toString();
+         db.collection("DotDotOrders"). doc(currentOrderId).set({
             userDisplayName,
             currentQuantity,
             currentPrice,
@@ -64,13 +65,13 @@ const DotDotCart = ({ navigation, route }) => {
             latitude,
             userPhoneNumber,
             uid: auth.currentUser.uid,
-            status: 'pending',
+            status: 'New Order',
             agentId: null,
             TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
 
         //navigation
-        navigation.navigate('LoadingScreen');     
+        navigation.navigate('LoadingScreen', {currentOrderId: currentOrderId});     
     }
 
 

@@ -1,5 +1,5 @@
 import React, {useState,useRef,useEffect} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput, ActivityIndicator } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list'
@@ -8,11 +8,17 @@ import Listing from '../components/Listing';
 import { FUNDIS } from '../data/services';
 import MapView, { PROVIDER_GOOGLE, } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { dbc } from '../Database/fundiDB';
 
 
-const ListingScreen = ({ navigation }) => {
+const ListingScreen = ({ navigation, route }) => {
 
     const [latlng, setLatLng] = useState({})
+    const [recievedQuote, setRecievedQuote] = useState(false);
+    const [currentOrderId, setCurrentOrderId] = useState(route.params.currentOrderId);
+
+    
+  
 
     const checkPermission = async () => {
       const hasPermission = await Location.requestForegroundPermissionsAsync();
@@ -91,7 +97,7 @@ const ListingScreen = ({ navigation }) => {
 
 
                 <Card style={styles.card}>
-
+                    {recievedQuote ?
                     <View style={styles.flatlist}>
                         <FlatList
                             keyExtractor={(item, index) => item.id}
@@ -100,7 +106,12 @@ const ListingScreen = ({ navigation }) => {
                             numColumns={1}
                         />
 
-                    </View>
+                    </View> : 
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text>Wait for confirmation</Text>
+                    </View> }
+                    
 
 
 

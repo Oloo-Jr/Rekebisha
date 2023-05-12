@@ -156,8 +156,7 @@ const DotDotCheckout = ({ navigation }) => {
                                 <View>
                                     <Text style={styles.text2d}>Total</Text>
                                     <View style={styles.customerDet}>
-                                        <Text style={styles.text5}>Mobile Money</Text>
-                                        
+                                        <Text style={styles.text5}>Mobile Money</Text>         
                                     </View>
 
                                 </View>
