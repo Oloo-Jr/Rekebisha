@@ -63,7 +63,7 @@ return (
                     <View style={styles.buttonView}>
 
 
-                    <TouchableOpacity onPress={() => { navigation.navigate("ConfirmScreen", { state: 0 }) }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate("", { state: 0 }) }}>
 
 <Card style={styles.submitbutton}>
 
