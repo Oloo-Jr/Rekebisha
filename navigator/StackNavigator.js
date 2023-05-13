@@ -7,6 +7,7 @@ import ListingScreen from '../screen/ListingScreen';
 import LoginScreen from '../screen/LoginScreen';
 import QuoteScreen from '../screen/QuoteScreen';
 import ConfirmScreen from '../screen/ConfirmScreen';
+import CompletedScreen from '../screen/DotDot/Completed';
 import SignUpScreen from '../screen/SignUp';
 import HustlerScreen from '../screen/HustlerScreen';
 import ProductScreen from '../screen/ProductScreen';
@@ -23,13 +24,13 @@ export function HomeStack() {
     return (
         <Home.Navigator>
 
-<Home.Screen
+            <Home.Screen
                 name="SignUpScreen"
                 component={SignUpScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="LoginScreen"
                 component={LoginScreen}
                 options={{ headerShown: false }}
@@ -53,57 +54,59 @@ export function HomeStack() {
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="ListingScreen"
                 component={ListingScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="QuoteScreen"
                 component={QuoteScreen}
                 options={{ headerShown: false }}
             />
 
 
-<Home.Screen
+            <Home.Screen
                 name="ConfirmScreen"
                 component={ConfirmScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+          
+
+            <Home.Screen
                 name="HustlerScreen"
                 component={HustlerScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="ProductScreen"
                 component={ProductScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="VendorMenuScreen"
                 component={VendorMenuScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="CheckoutScreen"
                 component={CheckoutScreen}
                 options={{ headerShown: false }}
             />
 
 
-<Home.Screen
+            <Home.Screen
                 name="DotDotScreen"
                 component={DotDotScreen}
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="DotDotCart"
                 component={DotDotCart}
                 options={{ headerShown: false }}
@@ -114,9 +117,14 @@ export function HomeStack() {
                 options={{ headerShown: false }}
             />
 
-<Home.Screen
+            <Home.Screen
                 name="DotDotCheckout"
                 component={DotDotCheckout}
+                options={{ headerShown: false }}
+            />
+              <Home.Screen
+                name="CompletedScreen"
+                component={CompletedScreen}
                 options={{ headerShown: false }}
             />
 

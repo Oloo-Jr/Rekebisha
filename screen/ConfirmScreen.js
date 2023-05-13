@@ -66,7 +66,7 @@ const ConfirmScreen = () => {
 
 
       <View style={styles.buttonView2}>
-                    <TouchableOpacity onPress={() => { navigation.navigate("QuoteScreen", { state: 0 }) }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate("CompletedScreen", { state: 0 }) }}>
 
 <Card style={styles.backButton}>
 
