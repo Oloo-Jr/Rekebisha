@@ -14,12 +14,12 @@ const DotDotScreen = ({ navigation }) => {
     const [Category, setCategory] = useState("FuelTreatment");
     //Product 1
     const [Quantity1, setQuantity1] = useState("7ml");
-    const [Price1, setPrice1] = useState("KES 1,000/-");
+    const [Price1, setPrice1] = useState(1000);
     const [Description, setDescription] = useState("");
 
     //Product 2
     const [Quantity2, setQuantity2] = useState("240ml");
-    const [Price2, setPrice2] = useState("KES 24,000/-");
+    const [Price2, setPrice2] = useState(24000);
     const [Description2, setDescription2] = useState("");
     const [image2, setImage2] = useState(null);
 

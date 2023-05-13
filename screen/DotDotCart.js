@@ -23,8 +23,9 @@ const DotDotCart = ({ navigation, route }) => {
     const [longitude, setLongitude] = useState("");
     const [userDisplayName, setUserDisplayName] = useState("");
     const [userPhoneNumber, setUserPhoneNumber] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [taken, setTaken] = useState("No");
+    const [isLoading, setIsLoading] = useState(false);    
+    const [address, setAddress] = useState('');
+
 
     const getUserDetails = async () => {
         const doc = await db.collection('users').doc(auth.currentUser.uid).get();
@@ -35,6 +36,20 @@ const DotDotCart = ({ navigation, route }) => {
         setUserPhoneNumber(phoneNumber);
     
   }
+  const checkPermission = async () => {
+    const hasPermission = await Location.requestForegroundPermissionsAsync();
+    if (hasPermission.status === 'granted') {
+      const permission = await askPermission();
+      return permission
+    }
+    return true
+  };
+
+  const askPermission = async () => {
+    const permission = await Location.requestBackgroundPermissionsAsync();
+    return permission.status === 'granted';
+  };
+
     const getLocation = async () => {
         try {
           const { granted } = await Location.requestBackgroundPermissionsAsync();
@@ -48,10 +63,24 @@ const DotDotCart = ({ navigation, route }) => {
     
         }
       }
+
+             //Get the Town using Latitude and Longitude
+  const geocode = async () => {
+    const geocodedAddress = await Location.reverseGeocodeAsync({
+        longitude: longitude,
+        latitude: latitude
+    });
+    setAddress(geocodedAddress[0].city);
+    console.log('reverseGeocode:');
+    console.log(geocodedAddress[0].city);
+
+}
   
       useEffect(() => {
         getLocation();
+        geocode();
         getUserDetails();
+      
       }, [])
       
    const BuyDotDotProduct = () =>{
@@ -64,10 +93,12 @@ const DotDotCart = ({ navigation, route }) => {
             longitude,
             latitude,
             userPhoneNumber,
+            address,
             uid: auth.currentUser.uid,
             status: 'New Order',
-            agentId: null,
+            agentId: "",
             TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+            
         });
 
         //navigation
@@ -136,7 +167,7 @@ const DotDotCart = ({ navigation, route }) => {
 <View style={styles.orderDetails}>
     <View style={styles.textView}>
         <Text style={styles.text12}>Quantity: {currentQuantity}</Text>
-        <Text style={styles.text22}>{currentPrice}</Text>
+        <Text style={styles.text22}> Ksh {currentPrice}</Text>
     </View>
 
     
@@ -212,7 +243,7 @@ const DotDotCart = ({ navigation, route }) => {
 <View style={styles.textView}>
 
 <Text  style={styles.text2d2}>Total</Text>
-<Text style={styles.text2e2}>{currentPrice}</Text>
+<Text style={styles.text2e2}>Ksh {currentPrice}</Text>
 </View>
 
 
