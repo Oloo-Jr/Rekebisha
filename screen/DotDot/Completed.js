@@ -37,20 +37,7 @@ return (
     <View style={styles.container}>
         
 
-        <View style={styles.iconView}>
-            <Icon
-                type="material-community"
-                name="menu"
-                //color = {colors.grey1}
-                size={35}
-                onPress={() => { navigation.navigate("RequestScreen", { state: 0 }) }}
-            />
-
-
-
-
-
-        </View>
+        
 
         
        
@@ -61,11 +48,17 @@ return (
 
                 <Card style={styles.card}>
                     <View style={styles.textView}>
-                        <TitleText style={styles.Text}>John has Completed the task</TitleText>
+                        <TitleText style={styles.Text}>Delivery Complete</TitleText>
 
                     </View>
-                 
+                 <View style={styles.imageView}>
+                    <Image
+                            source={require('../../assets/Fundi.png')}
+                            style={styles.image}
+                        // resizeMode="cover" 
+                        />
 
+</View>
 
                     <View style={styles.buttonView}>
 
@@ -180,7 +173,7 @@ buttonView: {
 
     zIndex: 30,
     position: 'absolute',
-    bottom: 90,
+    bottom: 40,
     width: Dimensions.get('window').width * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,7 +246,7 @@ card: {
   //  justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    height: Dimensions.get('window').height * 0.75,
+    height: Dimensions.get('window').height * 0.6,
     shadowOpacity: 0.2,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
@@ -264,11 +257,17 @@ card: {
 
 
 image: {
-    //height: Dimensions.get('window').width * 0.25,
-    //  width: Dimensions.get('window').width * 0.25,
-
+    paddingTop:Dimensions.get('window').width * 0.5 ,
+    height: Dimensions.get('window').width * 0.5,
+    width: Dimensions.get('window').width * 0.5,
+    borderRadius: 120,
+    backgroundColor: '#17304A'
 },
 
+imageView: {
+    paddingTop:Dimensions.get('window').width * 0.13 ,
+    
+},
 
 gridView: {
 
@@ -280,7 +279,7 @@ gridView: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    height: Dimensions.get('window').height * 0.75,
+    height: Dimensions.get('window').height * 0.55,
 
 },
 
