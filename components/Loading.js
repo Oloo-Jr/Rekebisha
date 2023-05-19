@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,  } from 'react';
 import React from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
+import { View, ActivityIndicator, Text, BackHandler } from 'react-native';
 import { db } from '../Database/config';
 
 function LoadingScreen({navigation, route}) {
@@ -20,6 +20,17 @@ function LoadingScreen({navigation, route}) {
     });
     return () => unsubscribe();
   }, [currentOrderId, navigation]);
+
+  // Inside your screen component
+useEffect(() => {
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    // Return true to prevent navigation
+    return true;
+  });
+
+  return () => backHandler.remove();
+}, []);
+
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

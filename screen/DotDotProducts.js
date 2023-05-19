@@ -16,16 +16,16 @@ const DotDotScreen = ({ navigation }) => {
     const [Quantity1, setQuantity1] = useState("7ml");
     const [Price1, setPrice1] = useState(1000);
     const [Description, setDescription] = useState("");
+    const [image1, setImage1] = useState('https://firebasestorage.googleapis.com/v0/b/rekebishaapp.appspot.com/o/DotDot%20Product%20Pictures%2FDotDotProduct1.jpg?alt=media&token=380b051f-30f9-4fa0-8e0e-e6e58c05469c')
 
     //Product 2
     const [Quantity2, setQuantity2] = useState("240ml");
-    const [Price2, setPrice2] = useState(24000);
+    const [Price2, setPrice2] = useState(26000);
     const [Description2, setDescription2] = useState("");
-    const [image2, setImage2] = useState(null);
+    const [image2, setImage2] = useState('https://firebasestorage.googleapis.com/v0/b/rekebishaapp.appspot.com/o/DotDot%20Product%20Pictures%2FDotDOtProduct2.jpg?alt=media&token=7e1d236e-1a29-4d00-ba38-d5d2a94b9958');
 
-    const handleImageLoad = () => {
-        setImage2(require('../assets/DotDotProduct1.jpg'));
-      };
+
+   
 
     return (
 
@@ -106,7 +106,7 @@ const DotDotScreen = ({ navigation }) => {
 
                     <Card style={styles.offerProduct}>
                         <ImageBackground
-                            source={require('../assets/DotDOtProduct2.jpg')}
+                            source={{uri: image2}}
                             resizeMode="cover"
                             style={styles.imageBg}
                         >
@@ -117,7 +117,7 @@ const DotDotScreen = ({ navigation }) => {
                                 <TitleText style={styles.subText}>Quantity: {Quantity1}</TitleText>
 
                                 <View style={styles.priceView}>
-                                    <Text style={styles.offerText1}>{Price1}</Text>
+                                    <Text allowFontScaling={false} style={styles.offerText1}>{Price1}</Text>
 
                                 </View>
                             </View>
@@ -143,9 +143,8 @@ const DotDotScreen = ({ navigation }) => {
 
                             <View style={styles.imageView}>
                                 <Image
-                                    source={image2}
+                                    source={{uri: image1}}
                                     style={styles.image}
-                                    onLoad={handleImageLoad}
                                 // resizeMode="cover" 
                                 />
 
@@ -172,7 +171,7 @@ const DotDotScreen = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
                                         { currentQuantity2:Quantity2,
                                                  currentPrice: Price2,
-                                                 currentImage: image2}) }}>
+                                                 currentImage: image1}) }}>
                                             <TitleText style={styles.prodName}>ADD TO CART</TitleText>
                                         </TouchableOpacity>
                                     </View>

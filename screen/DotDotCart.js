@@ -19,13 +19,59 @@ const DotDotCart = ({ navigation, route }) => {
     const [currentPrice, setCurrentPrice] = useState(route.params.currentPrice);
     const [currentImage, setCurrentImage] = useState(route.params.currentImage);
     const [isButtonPressed, setIsButtonPressed] = useState(false);
-    const [latitude, setLatitude] = useState("");
-    const [longitude, setLongitude] = useState("");
     const [userDisplayName, setUserDisplayName] = useState("");
     const [userPhoneNumber, setUserPhoneNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);    
     const [address, setAddress] = useState('');
+    const [location, setLocation] = useState({});
+  const [errorMsg, setErrorMsg] = useState(null);
 
+
+    useEffect(() => {
+        (async () => {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+          getUserDetails();
+        })();
+      }, []);
+
+      const BuyDotDotProduct = async () => {
+       
+
+        try {
+          const { latitude, longitude } = location.coords;
+          const currentOrderId = Math.floor(100000+Math.random()*9000).toString();
+    
+          await db.collection("DotDotOrders"). doc(currentOrderId).set({
+            userDisplayName,
+            currentQuantity,
+            currentPrice,
+            longitude,
+            latitude,
+            userPhoneNumber,
+            address,
+            uid: auth.currentUser.uid,
+            status: 'New Order',
+             currentImage,
+            agentId: "",
+            TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+    
+          console.log('Location saved successfully');
+          //navigation
+        navigation.navigate('LoadingScreen', {currentOrderId: currentOrderId});     
+        } catch (error) {
+          console.error('Error saving location:', error);
+        }
+      };
+
+      
 
     const getUserDetails = async () => {
         const doc = await db.collection('users').doc(auth.currentUser.uid).get();
@@ -36,55 +82,16 @@ const DotDotCart = ({ navigation, route }) => {
         setUserPhoneNumber(phoneNumber);
     
   }
-  const checkPermission = async () => {
-    const hasPermission = await Location.requestForegroundPermissionsAsync();
-    if (hasPermission.status === 'granted') {
-      const permission = await askPermission();
-      return permission
-    }
-    return true
-  };
 
-  const askPermission = async () => {
-    const permission = await Location.requestBackgroundPermissionsAsync();
-    return permission.status === 'granted';
-  };
 
-    const getLocation = async () => {
-        try {
-          const { granted } = await Location.requestBackgroundPermissionsAsync();
-          if (!granted) return;
-          const {
-            coords: { latitude, longitude },
-          } = await Location.getCurrentPositionAsync();
-          setLatitude(latitude)
-          setLongitude(longitude)
-        } catch (err) {
-    
-        }
-      }
-
-             //Get the Town using Latitude and Longitude
-  const geocode = async () => {
-    const geocodedAddress = await Location.reverseGeocodeAsync({
-        longitude: longitude,
-        latitude: latitude
-    });
-    setAddress(geocodedAddress[0].city);
-    console.log('reverseGeocode:');
-    console.log(geocodedAddress[0].city);
-
-}
   
-      useEffect(() => {
-        getLocation();
-        geocode();
-        getUserDetails();
+  
       
-      }, [])
-      
-   const BuyDotDotProduct = () =>{
+ {/*  const BuyDotDotProduct = () =>{
+    getUserDetails();
     setIsLoading(true);
+    
+
       const currentOrderId = Math.floor(100000+Math.random()*9000).toString();
          db.collection("DotDotOrders"). doc(currentOrderId).set({
             userDisplayName,
@@ -96,6 +103,7 @@ const DotDotCart = ({ navigation, route }) => {
             address,
             uid: auth.currentUser.uid,
             status: 'New Order',
+             currentImage,
             agentId: "",
             TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
             
@@ -104,7 +112,7 @@ const DotDotCart = ({ navigation, route }) => {
         //navigation
         navigation.navigate('LoadingScreen', {currentOrderId: currentOrderId});     
     }
-
+*/}
 
     return (
 
@@ -158,7 +166,7 @@ const DotDotCart = ({ navigation, route }) => {
 
 <View style={styles.cartprodImage}>
 <Image
-        source={currentImage}
+        source={{uri: currentImage}}
         style={styles.bannerimage}
     // resizeMode="cover" 
     />
@@ -166,8 +174,8 @@ const DotDotCart = ({ navigation, route }) => {
 
 <View style={styles.orderDetails}>
     <View style={styles.textView}>
-        <Text style={styles.text12}>Quantity: {currentQuantity}</Text>
-        <Text style={styles.text22}> Ksh {currentPrice}</Text>
+        <Text allowFontScaling={false} style={styles.text12}>Quantity: {currentQuantity}</Text>
+        <Text allowFontScaling={false} style={styles.text22}> Ksh {currentPrice}</Text>
     </View>
 
     
@@ -177,7 +185,7 @@ const DotDotCart = ({ navigation, route }) => {
 
         <View style={styles.textView2}>
             <MaterialIcons name="timer" size={24} color="red" />
-            <Text style={styles.text42}>25 - 30 mins</Text>
+            <Text allowFontScaling={false} style={styles.text42}>25 - 30 mins</Text>
         </View>
 
         <View style={styles.textView2}>
@@ -192,7 +200,7 @@ const DotDotCart = ({ navigation, route }) => {
 
         <View   style={styles.textView2}>
             <MaterialIcons onPress={() => setIsButtonPressed(true)} name="description" size={24} color="blue" />
-            <Text style={styles.text42}>Description</Text>
+            <Text allowFontScaling={false} style={styles.text42}>Description</Text>
             
         </View>
 
@@ -208,7 +216,7 @@ const DotDotCart = ({ navigation, route }) => {
 
        <View style={styles.textView2}>
        {isButtonPressed &&
-       <Text style={styles.text42}>The Dalhin Efficiamax®Ten-35 fuel treatment is a
+       <Text allowFontScaling={false} style={styles.text42}>The Dalhin Efficiamax®Ten-35 fuel treatment is a
                 combustion catalyst that gives your engine greater
                 fuel efficiency. Our product decreases combustible
                 carbon residue by providing a more complete burn.
@@ -242,8 +250,8 @@ const DotDotCart = ({ navigation, route }) => {
 
 <View style={styles.textView}>
 
-<Text  style={styles.text2d2}>Total</Text>
-<Text style={styles.text2e2}>Ksh {currentPrice}</Text>
+<Text allowFontScaling={false}  style={styles.text2d2}>Total</Text>
+<Text allowFontScaling={false} style={styles.text2e2}>Ksh {currentPrice}</Text>
 </View>
 
 
@@ -253,7 +261,7 @@ const DotDotCart = ({ navigation, route }) => {
         <Card style={styles.acceptButton}>
             <TouchableOpacity 
             onPress={BuyDotDotProduct}>
-            <Text style={styles.text2c2}>
+            <Text allowFontScaling={false} style={styles.text2c2}>
                    Add to Cart
                 </Text>
 

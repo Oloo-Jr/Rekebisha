@@ -1,12 +1,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput, ImageBackground, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput, ImageBackground, Image, BackHandler } from 'react-native';
 import Card from '../../components/card';
 import { Dimensions } from 'react-native';
 import TitleText from '../../components/TitleText';
 import * as Location from 'expo-location';
 import SubText from '../../components/SubText';
-
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MapView from 'react-native-maps';
 import { db } from '../../Database/config';
@@ -21,6 +20,32 @@ const DotDotCheckout = ({ navigation, route }) => {
     const [deliveryTime, setDeliveryTime] = useState("");
     const [totalAmount, setTotalAmount] = useState(0);
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [delivered, setDelivered] = useState(false);
+
+    
+  useEffect(() => {
+    const itemRef = db.collection('DotDotOrders').doc(currentOrderId);
+    const unsubscribe = itemRef.onSnapshot((doc) => {
+      if (doc.exists) {
+        const selectedOrderData = doc.data();
+        if (selectedOrderData.status === 'Delivered') {
+          setDelivered(true)
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [currentOrderId]);
+  
+  // Inside your screen component
+useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Return true to prevent navigation
+      return true;
+    });
+  
+    return () => backHandler.remove();
+  }, []);
+  
 
 
     const getOrderDetails = async () => {
@@ -50,6 +75,10 @@ const DotDotCheckout = ({ navigation, route }) => {
          setIsConfirmed(true);
  
        };
+
+       const handlePayment = () => {
+        navigation.navigate("CompletedScreen", {currentOrderId})
+       }
 
     /*  const renderGridItem = itemData => {
           return (
@@ -117,14 +146,6 @@ const DotDotCheckout = ({ navigation, route }) => {
                 style={styles.imageBackground}
             >
 
-
-
-
-
-
-
-
-
                 <View style={styles.gigs}>
 
                     <Card style={styles.prodCard}>
@@ -133,18 +154,18 @@ const DotDotCheckout = ({ navigation, route }) => {
 
                             <View style={styles.textView1}>
                                 <View>
-                                    <Text style={styles.text3}>DotDot Catalyst XTRA {quantity} </Text>
+                                    <Text allowFontScaling={false} style={styles.text3}>DotDot Catalyst XTRA {quantity} </Text>
 
 
                                     <View style={styles.remove}>
-                                    <Text style={styles.text3}>Remove</Text>
-                                        <MaterialIcons name="trash" size={20} color="grey" />
+                                    <Text allowFontScaling={false} style={styles.text3}>Remove</Text>
+                                        <MaterialIcons name="delete" size={20} color="grey" />
                                     </View>
 
 
                                 </View>
 
-                                <Text style={styles.text2}>KES {productPrice}</Text>
+                                <Text allowFontScaling={false} style={styles.text2}>KES {productPrice}</Text>
                             </View>
 
 
@@ -153,7 +174,7 @@ const DotDotCheckout = ({ navigation, route }) => {
 
                         <View style={styles.orderDetails}>
                             <View style={styles.textView}>
-                                <Text style={styles.text1}>Delivery Details</Text>
+                                <Text allowFontScaling={false} style={styles.text1}>Delivery Details</Text>
 
                             </View>
 
@@ -165,7 +186,7 @@ const DotDotCheckout = ({ navigation, route }) => {
                             <View style={styles.textView}>
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="motorcycle" size={24} color="grey" />
-                                    <Text style={styles.text5}>{town}</Text>
+                                    <Text allowFontScaling={false} style={styles.text5}>{town}</Text>
                                 </View>
                                 <MaterialIcons name="motorcycle" size={24} color="grey" />
                             </View>
@@ -183,13 +204,13 @@ const DotDotCheckout = ({ navigation, route }) => {
                             <View style={styles.textView}>
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="timer" size={24} color="red" />
-                                    <Text style={styles.text4}>{deliveryTime} mins</Text>
+                                    <Text allowFontScaling={false} style={styles.text4}>{deliveryTime} mins</Text>
                                 </View>
 
 
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="motorcycle" size={24} color="grey" />
-                                    <Text style={styles.text4}>Deliver to Ebenezer</Text>
+                                    <Text allowFontScaling={false} style={styles.text4}>Deliver to Ebenezer</Text>
                                 </View>
 
 
@@ -209,15 +230,15 @@ const DotDotCheckout = ({ navigation, route }) => {
 
                             <View style={styles.textView}>
                                 <View>
-                                    <Text style={styles.text2d}>Total</Text>
+                                    <Text allowFontScaling={false} style={styles.text2d}>Total</Text>
                                     <View style={styles.customerDet}>
-                                        <Text style={styles.text5}>Mobile Money</Text>
+                                        <Text allowFontScaling={false} style={styles.text5}>Mobile Money</Text>
 
                                     </View>
 
                                 </View>
 
-                                <Text style={styles.text2e}>KES {totalAmount}</Text>
+                                <Text allowFontScaling={false} style={styles.text2e}>KES {totalAmount}</Text>
                             </View>
 
 
@@ -226,11 +247,19 @@ const DotDotCheckout = ({ navigation, route }) => {
 
 
                                 <Card style={styles.acceptButton}>
+                                    {isConfirmed ? 
+                                    <TouchableOpacity onPress={handlePayment}>
+                                        <Text allowFontScaling={false} style={styles.text2c}>
+                                            {delivered ? "Proceed to payment": "Please wait for your order..."}
+                                        </Text>
+                                    </TouchableOpacity>:
                                     <TouchableOpacity onPress={handleUpdate}>
-                                        <Text style={styles.text2c}>
-                                            {isConfirmed ? "Please wait for your packege....": "Confirm Order"}
+                                    <Text allowFontScaling={false} style={styles.text2c}>
+                                            Confirm Order
                                         </Text>
                                     </TouchableOpacity>
+                                    }
+                                    
                                 </Card>
 
                             </View>

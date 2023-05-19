@@ -9,6 +9,7 @@ import { FUNDIS } from '../data/services';
 import MapView, { PROVIDER_GOOGLE, } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { dbc } from '../Database/fundiDB';
+import { db } from '../Database/config';
 
 
 const ListingScreen = ({ navigation, route }) => {
@@ -16,9 +17,15 @@ const ListingScreen = ({ navigation, route }) => {
     const [latlng, setLatLng] = useState({})
     const [recievedQuote, setRecievedQuote] = useState(false);
     const [currentOrderId, setCurrentOrderId] = useState(route.params.currentOrderId);
+    const [quotes, setQuotes] = useState([]);
 
     
-  
+      if (!recievedQuote) {
+        return  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text>Wait for Fundi's Quotation</Text>
+                    </View> ;
+      }
 
     const checkPermission = async () => {
       const hasPermission = await Location.requestForegroundPermissionsAsync();
@@ -57,21 +64,6 @@ const ListingScreen = ({ navigation, route }) => {
         , []
     })
 
-    const renderGridItem = itemData => {
-        return (
-            ////COMPONENT IMPORTED TO RENDER FLATLIST ITEMS//////
-            <Listing
-                name={itemData.item.name}
-
-                image={itemData.item.image}
-                type={itemData.item.type}
-                completed={itemData.item.completed}
-                onSelect={() => { navigation.navigate("DescriptionScreen", { state: 0 }) }}
-
-
-            />
-        )
-    }
 
 
 
@@ -97,20 +89,62 @@ const ListingScreen = ({ navigation, route }) => {
 
 
                 <Card style={styles.card}>
-                    {recievedQuote ?
+                    
                     <View style={styles.flatlist}>
-                        <FlatList
-                            keyExtractor={(item, index) => item.id}
-                            data={FUNDIS}
-                            renderItem={renderGridItem}
-                            numColumns={1}
-                        />
+                    {quotes.map((quote) => (
+                         <View style={styles.productView}>
 
-                    </View> : 
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color="#0000ff" />
-                    <Text>Wait for confirmation</Text>
-                    </View> }
+
+                         <View style={styles.product}>
+                 
+                             <Image
+                                 source={require('../assets/icon.png')}
+                                 style={styles.image}
+                             // resizeMode="cover" 
+                             />
+                 
+                             <View style={styles.productDetails}>
+                                 <View >
+                                     <SubText style={styles.details}> </SubText>
+                                     <TitleText style={styles.detail}> </TitleText>
+                                     <TitleText style={styles.detail}>Completed jobs:</TitleText>
+                 
+                 
+                 
+                                     <View style={styles.buttonView}>
+                 
+                                         <View style={styles.buttonContainer}>
+                                             <Card style={styles.button}>
+                 
+                 
+                 
+                                                 <TitleText style={styles.buttonText}>View Portfolio</TitleText>
+                 
+                 
+                                             </Card>
+                                         </View>
+                 
+                 
+                                         <Card style={styles.requestButton}>
+                 
+                 
+                 
+                                             <TitleText style={styles.buttonText}>Request</TitleText>
+                 
+                 
+                                         </Card>
+                                     </View>
+                                 </View>
+                             </View>
+                 
+                         </View>
+                 
+                     </View>
+                    ))}
+
+
+                    </View> 
+                   
                     
 
 
