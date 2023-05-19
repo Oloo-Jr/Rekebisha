@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, FlatList, Text, Alert, BackHandler } from 'react-native';
 import Card from '../../components/card';
 import { Dimensions } from 'react-native';
 import { SERVICES } from '../../data/services';
@@ -9,7 +9,7 @@ import BodyText from '../../components/BodyText'
 import TitleText from '../../components/TitleText';
 import QuoteTable from '../../components/QuoteTable';
 import { QUOTE } from '../../data/services';
-
+import PaymentIcon from '@mui/icons-material/Payment';
 
 const CompletedScreen = ({ navigation }) => {
 
@@ -30,6 +30,21 @@ const CompletedScreen = ({ navigation }) => {
         )
     }
  
+    const MpesaAlert = () =>
+    Alert.alert('Pay with Mpesa', 'Till No: 1234567890', [
+      {text: 'OK', onPress: () => console.log('OK Pressed')},
+    ]);
+
+    // Inside your screen component
+useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Return true to prevent navigation
+      return true;
+    });
+  
+    return () => backHandler.remove();
+  }, []);
+  
 
 return (
 
@@ -63,14 +78,12 @@ return (
                     <View style={styles.buttonView}>
 
 
-                    <TouchableOpacity onPress={() => { navigation.navigate("", { state: 0 }) }}>
+                    <TouchableOpacity onPress={MpesaAlert}>
 
 <Card style={styles.submitbutton}>
-
-
-    <TitleText style={styles.Text}>Choose Payment</TitleText>
-
-
+    
+    <TitleText style={styles.Text}>Lipa Na Mpesa </TitleText>
+    
 </Card>
 
 </TouchableOpacity>

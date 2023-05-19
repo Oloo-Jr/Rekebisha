@@ -48,7 +48,6 @@ const DescriptionScreen = ({ navigation }) => {
       // Select an image from the device's gallery
 
 const uploadImage = async () => {
-  const currentuserProblem = Math.floor(100000+Math.random()*9000).toString();
 
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -92,7 +91,9 @@ const uploadImage = async () => {
                 serialNumber,
                 imgUrl: imageUrl,
                 FundiId: fundiId,
+                Quote: false,
                 TimeStamp:  firebase.firestore.FieldValue.serverTimestamp(),
+                status: ""
               })
             })
       }
@@ -108,7 +109,7 @@ const uploadImage = async () => {
   
   
       //Navigate
-      navigation.navigate("ListingScreen", {currentuserProblem: currentuserProblem});
+      navigation.navigate("ListingScreen", {currentuserProblem: serialNumber});
   }
   
 
@@ -177,7 +178,7 @@ const getUserDetails = async () => {
 }
   
     const data = [
-        { key: '1', value: 'Mason', disabled: true },
+        { key: '1', value: 'Mason' },
         { key: '2', value: 'Electrician' },
         { key: '3', value: 'Plumber' },
         {key: '4 ', value:'Construction Equipment Operator'},

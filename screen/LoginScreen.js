@@ -80,37 +80,6 @@ const LoginScreen = ({ navigation }) => {
                     />
 
 
-                    
-<BodyText style={styles.Text}>Or login with</BodyText>
-
-<View style={styles.socials}>
-                        <TouchableOpacity onPress={() => { navigation.navigate("HomeScreen", { state: 0 }) }}>
-
-                            <Card style={styles.socialsButton}>
-
-
-                                <BodyText style={styles.Text}>Google</BodyText>
-
-
-                            </Card>
-
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => { navigation.navigate("HomeScreen", { state: 0 }) }}>
-
-                            <Card style={styles.socialsButton}>
-
-
-                                <BodyText style={styles.Text}>Facebook</BodyText>
-
-
-                            </Card>
-
-                        </TouchableOpacity>
-                    </View>
-                    
-
-
 
                     <View style={styles.buttonView}>
                         <TouchableOpacity onPress={() => { navigation.navigate("HomeScreen", { state: 0 }) }}>
