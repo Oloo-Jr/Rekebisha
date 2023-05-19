@@ -114,7 +114,7 @@ const DotDotScreen = ({ navigation }) => {
                             <View style={styles.sideView}>
                                 <TitleText style={styles.offerText}>{Category}</TitleText>
                                 <TitleText style={styles.subText}>Efficiamax</TitleText>
-                                <TitleText style={styles.subText}>Quantity: {Quantity1}</TitleText>
+                                <TitleText style={styles.subText}>Quanti: {Quantity1}</TitleText>
 
                                 <View style={styles.priceView}>
                                     <Text style={styles.offerText1}>{Price1}</Text>
@@ -156,7 +156,7 @@ const DotDotScreen = ({ navigation }) => {
 
                         <View style={styles.buyView}>
 
-                            <TitleText style={styles.prodName}>Efficiamax: {Category}</TitleText>
+                          
 
 
                             <View style={styles.BuyView}>
@@ -432,8 +432,8 @@ const styles = StyleSheet.create({
 
     Product: {
 
-        height: Dimensions.get('window').height * 0.24,
-        width: Dimensions.get('window').width * 0.41,
+        height:230,
+        width: 150,
         overflow: 'hidden',
     },
 

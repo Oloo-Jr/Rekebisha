@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         // padding: 10,
         shadowColor: 'white',
-        height: Dimensions.get('window').height * 0.53,
+        height: 380,
         borderRadius: 15
     },
 
