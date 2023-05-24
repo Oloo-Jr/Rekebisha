@@ -15,16 +15,19 @@ import firebase from 'firebase';
 
 const DotDotCart = ({ navigation, route }) => {
 
-    const [currentQuantity, setCurrentQuantity] = useState(route.params.currentQuantity2);
-    const [currentPrice, setCurrentPrice] = useState(route.params.currentPrice);
-    const [currentImage, setCurrentImage] = useState(route.params.currentImage);
+    const [productId, setProductId] = useState(route.params.productId);
     const [isButtonPressed, setIsButtonPressed] = useState(false);
     const [userDisplayName, setUserDisplayName] = useState("");
     const [userPhoneNumber, setUserPhoneNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false);    
     const [address, setAddress] = useState('');
     const [location, setLocation] = useState({});
-  const [errorMsg, setErrorMsg] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [name, setName] = useState("");
+    const [quantity, setQuantity] = useState("")
+    const [price, setPrice] = useState(0);
+    const [category, setCategory] = useState("");
+    const [imgUrl, setImgUrl] = useState("");
 
 
     useEffect(() => {
@@ -38,8 +41,26 @@ const DotDotCart = ({ navigation, route }) => {
           let location = await Location.getCurrentPositionAsync({});
           setLocation(location);
           getUserDetails();
+          getProductDetails();
         })();
       }, []);
+
+      const getProductDetails = async () => {
+        const doc = await db.collection('DotDotProducts').doc(productId).get();
+        console.log(doc.data());
+        const Name = doc.data().Name;
+        const Quantity = doc.data().Quantity;
+        const Price = doc.data().Price;
+        const Category = doc.data().Category;
+        const ImgUrl = doc.data().ImgUrl;
+        setName(Name);
+        setQuantity(Quantity);
+        setPrice(Price);
+        setCategory(Category);
+        setImgUrl(ImgUrl);
+    
+  }
+
 
       const BuyDotDotProduct = async () => {
        
@@ -50,17 +71,18 @@ const DotDotCart = ({ navigation, route }) => {
     
           await db.collection("DotDotOrders"). doc(currentOrderId).set({
             userDisplayName,
-            currentQuantity,
-            currentPrice,
+            quantity,
+            price,
             longitude,
             latitude,
             userPhoneNumber,
             address,
             uid: auth.currentUser.uid,
             status: 'New Order',
-             currentImage,
+            imgUrl,
             agentId: "",
             TimeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+            category
           });
     
           console.log('Location saved successfully');
@@ -166,16 +188,18 @@ const DotDotCart = ({ navigation, route }) => {
 
 <View style={styles.cartprodImage}>
 <Image
-        source={{uri: currentImage}}
+        source={{uri: imgUrl}}
         style={styles.bannerimage}
     // resizeMode="cover" 
     />
 </View>
 
 <View style={styles.orderDetails}>
+<Text allowFontScaling={false} style={styles.text12}> {name}</Text>
     <View style={styles.textView}>
-        <Text allowFontScaling={false} style={styles.text12}>Quantity: {currentQuantity}</Text>
-        <Text allowFontScaling={false} style={styles.text22}> Ksh {currentPrice}</Text>
+    
+        <Text allowFontScaling={false} style={styles.text12}>Quantity: {quantity}</Text>
+        <Text allowFontScaling={false} style={styles.text22}> Ksh {price}</Text>
     </View>
 
     
@@ -185,7 +209,7 @@ const DotDotCart = ({ navigation, route }) => {
 
         <View style={styles.textView2}>
             <MaterialIcons name="timer" size={24} color="red" />
-            <Text allowFontScaling={false} style={styles.text42}>25 - 30 mins</Text>
+            <Text allowFontScaling={false} style={styles.text42}>N/A mins</Text>
         </View>
 
         <View style={styles.textView2}>
@@ -251,7 +275,7 @@ const DotDotCart = ({ navigation, route }) => {
 <View style={styles.textView}>
 
 <Text allowFontScaling={false}  style={styles.text2d2}>Total</Text>
-<Text allowFontScaling={false} style={styles.text2e2}>Ksh {currentPrice}</Text>
+<Text allowFontScaling={false} style={styles.text2e2}>Ksh {price}</Text>
 </View>
 
 
@@ -262,7 +286,7 @@ const DotDotCart = ({ navigation, route }) => {
             <TouchableOpacity 
             onPress={BuyDotDotProduct}>
             <Text allowFontScaling={false} style={styles.text2c2}>
-                   Add to Cart
+                   Buy
                 </Text>
 
             </TouchableOpacity>
@@ -301,7 +325,7 @@ const DotDotCart = ({ navigation, route }) => {
 
 
 
-                <View style={styles.productcard}>
+             {/*  <View style={styles.productcard}>
                     <Card style={styles.Product}>
 
                         <View style={styles.prodImageView}>
@@ -357,7 +381,7 @@ const DotDotCart = ({ navigation, route }) => {
                     </Card>
 
                 </View>
-
+       */}
 
 
 
@@ -477,7 +501,8 @@ const styles = StyleSheet.create({
       //  flexDirection: 'row',
         padding: 10,
         borderBottomWidth: 0.17,
-        borderBottomColor: '#F5F2F0'
+        borderBottomColor: '#F5F2F0',
+        height: 'auto'
 
     },
 
@@ -638,7 +663,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         // padding: 10,
         shadowColor: 'white',
-        height: 380,
+        height: 'auto',
         borderRadius: 15
     },
 

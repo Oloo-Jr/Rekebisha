@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Image, ImageBackground, FlatList, Text, TouchableOpacity } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
@@ -8,22 +8,140 @@ import { Icon } from 'react-native-elements';
 import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
-
+import { db } from '../Database/config';
 const DotDotScreen = ({ navigation }) => {
 
     const [Category, setCategory] = useState("FuelTreatment");
-    //Product 1
-    const [Quantity1, setQuantity1] = useState("7ml");
-    const [Price1, setPrice1] = useState(1000);
-    const [Description, setDescription] = useState("");
-    const [image1, setImage1] = useState('https://firebasestorage.googleapis.com/v0/b/rekebishaapp.appspot.com/o/DotDot%20Product%20Pictures%2FDotDotProduct1.jpg?alt=media&token=380b051f-30f9-4fa0-8e0e-e6e58c05469c')
+    const [allproducts, setallProducts] = useState([]);
+    const [refreshing, setRefreshing] = useState(false)
+    const [allofferproducts, setallOfferProducts] = useState([]);
+   
 
-    //Product 2
-    const [Quantity2, setQuantity2] = useState("240ml");
-    const [Price2, setPrice2] = useState(26000);
-    const [Description2, setDescription2] = useState("");
-    const [image2, setImage2] = useState('https://firebasestorage.googleapis.com/v0/b/rekebishaapp.appspot.com/o/DotDot%20Product%20Pictures%2FDotDOtProduct2.jpg?alt=media&token=7e1d236e-1a29-4d00-ba38-d5d2a94b9958');
+    const getProducts =async () => {
+        setRefreshing(true);
+    
+        const allproducts = [];
+        const querySnapshot = await db.collection("DotDotProducts").get();
+        querySnapshot.forEach((doc) => {
+            allproducts.push({ id: doc.id, ...doc.data() });
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+        setallProducts([...allproducts]);
+        setRefreshing(false);
+        
+    }
+    
+    const getOfferProducts =async () => {
+        setRefreshing(true);
+    
+        const allofferproducts = [];
+        const querySnapshot = await db.collection("DotDot Offer Products").get();
+        querySnapshot.forEach((doc) => {
+            allofferproducts.push({ id: doc.id, ...doc.data() });
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+        setallOfferProducts([...allofferproducts]);
+        setRefreshing(false);
+        
+    }
 
+    
+  useEffect(() => {
+    getProducts();
+    getOfferProducts();
+  }, []);
+
+  const renderOfferItem = ({ item }) => (
+  
+            <Card  style={styles.offerProduct}>
+            <ImageBackground
+                source={{uri: item.ImgUrl}}
+                resizeMode="cover"
+                style={styles.imageBg}
+            >
+
+                <View style={styles.sideView}>
+                    <TitleText style={styles.offerText}>{item.Category}</TitleText>
+                    <TitleText style={styles.subText}>{item.Name}</TitleText>
+
+                    <View style={styles.priceView}>
+                        <Text allowFontScaling={false} style={styles.offerText1}>KES {item.Price}</Text>
+
+                    </View>
+                </View>
+
+
+            </ImageBackground>
+
+        </Card>
+  );
+
+    const renderItem = ({ item }) => (
+        <View style={styles.fastFoods}>
+                    <TitleText style={styles.offerText}>     </TitleText>
+
+
+
+
+
+                    <Card style={styles.Product}>
+
+                        <View style={styles.prodImageView}>
+
+                            <View style={styles.imageView}>
+                                <Image
+                                    source={{uri: item.ImgUrl}}
+                                    style={styles.image}
+                                // resizeMode="cover" 
+                                />
+
+                            </View>
+
+                        </View>
+
+
+                        <View style={styles.buyView}>
+
+                          
+
+
+                            <View style={styles.BuyView}>
+                            <TitleText style={styles.prodName}>Name: {item.Name}</TitleText>
+                                <TitleText style={styles.prodName}>Quantity: {item.Quantity}</TitleText>
+                                
+                                <TitleText style={styles.prodName}>{item.Price}</TitleText>
+
+
+
+
+                                <View style={styles.addtocart}>
+                                    <View style={styles.buttonView}>
+                                        <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
+                                        { productId: item.id}) }}>
+                                            <TitleText style={styles.prodName}>ADD TO CART</TitleText>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+
+
+
+
+                            </View>
+                        </View>
+
+
+
+
+                    </Card>
+
+                    
+
+                </View>
+
+      );
+    
 
    
 
@@ -99,102 +217,38 @@ const DotDotScreen = ({ navigation }) => {
 
                 <View style={styles.offer}>
                     <TitleText style={styles.offerText}>Best Offers Today</TitleText>
-
-
-
-
-
-                    <Card style={styles.offerProduct}>
-                        <ImageBackground
-                            source={{uri: image2}}
-                            resizeMode="cover"
-                            style={styles.imageBg}
-                        >
-
-                            <View style={styles.sideView}>
-                                <TitleText style={styles.offerText}>{Category}</TitleText>
-                                <TitleText style={styles.subText}>Efficiamax</TitleText>
-                                <TitleText style={styles.subText}>Quanti: {Quantity1}</TitleText>
-
-                                <View style={styles.priceView}>
-                                    <Text allowFontScaling={false} style={styles.offerText1}>{Price1}</Text>
-
-                                </View>
-                            </View>
-
-
-                        </ImageBackground>
-
-                    </Card>
-
-                </View>
-
-
-                <View style={styles.fastFoods}>
-                    <TitleText style={styles.offerText}>     </TitleText>
-
-
-
-
-
-                    <Card style={styles.Product}>
-
-                        <View style={styles.prodImageView}>
-
-                            <View style={styles.imageView}>
-                                <Image
-                                    source={{uri: image1}}
-                                    style={styles.image}
-                                // resizeMode="cover" 
-                                />
-
-                            </View>
-
-                        </View>
-
-
-                        <View style={styles.buyView}>
-
-                          
-
-
-                            <View style={styles.BuyView}>
-                                <TitleText style={styles.prodName}>Quantity: {Quantity2}</TitleText>
-                                
-                                <TitleText style={styles.prodName}>{Price2}</TitleText>
-
-
-
-
-                                <View style={styles.addtocart}>
-                                    <View style={styles.buttonView}>
-                                        <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
-                                        { currentQuantity2:Quantity2,
-                                                 currentPrice: Price2,
-                                                 currentImage: image1}) }}>
-                                            <TitleText style={styles.prodName}>ADD TO CART</TitleText>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-
-
-
-                            </View>
-                        </View>
-
-
-
-
-                    </Card>
+                    {/*FlatList*/}
+                    <FlatList 
+                    data={allofferproducts}
+                    onRefresh={getOfferProducts}
+                    refreshing={refreshing}
+                    horizontal
+                    showsHorizontalScrollIndicator={true}
+                    style={{
+                    paddingHorizontal: 20,
+                    marginBottom:10,
+                    marginRight: 50,
+                    width:'auto',
+                   
+                    }}
+                    renderItem={renderOfferItem} 
+                    />
 
                     
 
                 </View>
 
-
-
-
+                {/*Flatlist*/}
+                <FlatList 
+                    data={allproducts}
+                    onRefresh={getProducts}
+                    refreshing={refreshing}
+                    showsVerticalScrollIndicator={false}
+                    style={{
+                    paddingVertical: 20
+                    }}
+                    renderItem={renderItem} 
+                    />
 
 
 
@@ -298,7 +352,7 @@ const styles = StyleSheet.create({
 
         color: 'black',
         fontSize: 15,
-        padding: 2
+    
     },
 
     buttonView: {
@@ -412,27 +466,31 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height * 0.20,
         width: Dimensions.get('window').width * 1,
         paddingLeft: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.6)'
+        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        
     },
 
     fastFoods: {
-        height: Dimensions.get('window').height * 0.20,
-        width: Dimensions.get('window').width * 1,
-        paddingLeft: 20,
+        height: "auto",
+        width: Dimensions.get('window').width * 9,
+        paddingLeft: 40,
+        marginBottom: 30,
+        
         //  backgroundColor: 'rgba(255, 255, 255, 0.6)'
     },
 
     offerProduct: {
 
-        height: '80%',
-        width: '70%',
-        overflow: 'hidden',
+        height: 'auto',
+        width: '100%',
+        
     },
 
     Product: {
 
         height:230,
-        width: 150,
+        width: 300,
+        
         overflow: 'hidden',
     },
 

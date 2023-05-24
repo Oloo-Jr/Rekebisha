@@ -7,8 +7,8 @@ import TitleText from '../../components/TitleText';
 import * as Location from 'expo-location';
 import SubText from '../../components/SubText';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MapView from 'react-native-maps';
-import { db } from '../../Database/config';
+import MapView, {Marker, Polyline} from 'react-native-maps';
+import { db } from '../../Database/config'
 
 
 const DotDotCheckout = ({ navigation, route }) => {
@@ -17,10 +17,21 @@ const DotDotCheckout = ({ navigation, route }) => {
     const [quantity, setQuantity] = useState('')
     const [productPrice, setProductPrice] = useState(0);
     const [town, setTown] = useState("");
-    const [deliveryTime, setDeliveryTime] = useState("");
+    const [deliveryTime, setDeliveryTime] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [delivered, setDelivered] = useState(false);
+    const [agentfirstname, setAgentFirstName] = useState("");
+    const [agentlastname, setAgentLastName] = useState("");
+    const [agentvehiclemodel, setAgentVehicleModel] = useState("");
+    const [agentvehicleregno, setAgentVehicleRegNo] = useState("");
+    const [agentlatitude, setAgentLatitude] = useState("");
+    const [agentlongitude, setAgentLongitude] = useState("");
+    const [couriercharges, setCourierCharges] = useState(0);
+    const [distance, setDistance] = useState(0);
+    const [buyerlatitude, setBuyerLatitude] = useState("");
+    const [buyerlongitude, setBuyerLongitude] = useState("");
+
 
     
   useEffect(() => {
@@ -49,23 +60,48 @@ useEffect(() => {
 
 
     const getOrderDetails = async () => {
-        const doc = await db.collection('DotDotOrders').doc(currentOrderId).get();
-        console.log(doc.data());
+       const doc = await db.collection('DotDotOrders').doc(currentOrderId).get();
+       console.log(doc.data());
        const  order = doc.data();
        const Quantity = order.currentQuantity;
        const ProductPrice = order.currentPrice;
        const address = order.address;
-       const time = order.roundedDeliveryTime;
-       const totalAmount = order.totalAmount;
+       const time = order.timeInMinutes;
+       const totalAmount = order.totalMoney;
+       const agentFirstName = order.agentfirstname;
+       const agentLastName = order.agentlastname;
+       const vehicleModel = order.agentvehiclemodel;
+       const vehicleRegNo = order.agentvehicleregno;
+       const agentLatitude = order.agentLatitude;
+       const agentLongitude = order.agentLongitude;
+       const courierCharges = order.courierCharges;
+       const distance = order.distance;
+       const buyerlatitude = order.latitude;
+       const buyerlongitude = order.longitude;
        setQuantity(Quantity);
        setProductPrice(ProductPrice);
        setTown(address);
        setDeliveryTime(time);
        setTotalAmount(totalAmount);
-    
+       setAgentFirstName(agentFirstName);
+       setAgentLastName(agentLastName);
+       setAgentVehicleModel(vehicleModel);
+       setAgentVehicleRegNo(vehicleRegNo);
+       setAgentLatitude(agentLatitude);
+       setAgentLongitude(agentLongitude);
+       setCourierCharges(courierCharges);
+       setDistance(distance);
+       setBuyerLongitude(buyerlongitude);
+       setBuyerLatitude(buyerlatitude);
     }
 
 
+    useEffect(() => {
+      getOrderDetails();
+    
+      
+    }, [])
+    
     const handleUpdate = () => {
         
         db.collection('DotDotOrders').doc(currentOrderId).update({
@@ -97,38 +133,8 @@ useEffect(() => {
           )
       }*/
 
-    //Get the location of the user
-    useEffect(() => {
-        const getPermissions = async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                console.log("Please grant location permissions")
-                return;
-            }
 
-            let curretLocation = await Location.getCurrentPositionAsync({});
-            setLocation(curretLocation);
-            console.log("Location:");
-            console.log(curretLocation);
-        };
-        getPermissions();
-        geocode();
-        getOrderDetails();
-
-
-    }, [])
-
-    //Get the Town using Latitude and Longitude
-    const geocode = async () => {
-        const geocodedAddress = await Location.reverseGeocodeAsync({
-            longitude: location.coords.longitude,
-            latitude: location.coords.latitude
-        });
-        setAddress(geocodedAddress[0].city);
-        console.log('reverseGeocode:');
-        console.log(geocodedAddress[0].city);
-
-    }
+    
 
 
 
@@ -186,31 +192,42 @@ useEffect(() => {
                             <View style={styles.textView}>
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="motorcycle" size={24} color="grey" />
-                                    <Text allowFontScaling={false} style={styles.text5}>{town}</Text>
+                                    <Text allowFontScaling={false} style={styles.text5}>{agentvehiclemodel} </Text>
                                 </View>
-                                <MaterialIcons name="motorcycle" size={24} color="grey" />
+                                
+                                <Text allowFontScaling={false} style={styles.text5}>Distance: {distance.toFixed(2)}km  </Text>
+                            </View>
+
+                            <View style={styles.textView}>
+                                <View style={styles.textView2}>
+                                    <MaterialIcons name="motorcycle" size={24} color="grey" />
+                                    <Text allowFontScaling={false} style={styles.text5}> {agentvehicleregno}</Text>
+                                </View>
+                                
+                                <Text allowFontScaling={false} style={styles.text5}>Courier Charges:  Ksh { couriercharges.toFixed(2)}</Text>
                             </View>
 
                             
                             <MapView
                                     style={styles.mapView}
                                 > 
-                                
-                            
-                                </MapView>
+                                <Marker pinColor='blue' coordinate={{ latitude: agentlatitude, longitude: agentlongitude }} />
+                                <Marker pinColor='green' coordinate={{ latitude: buyerlatitude, longitude: buyerlongitude }} />
+                                {/*<Polyline coordinates={{latitude:agentlatitude,longitude:agentlongitude, latitude: buyerlatitude, longitude: buyerlongitude}} strokeWidth={2} strokeColor="blue" />*/}
+                            </MapView>
                            
 
 
                             <View style={styles.textView}>
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="timer" size={24} color="red" />
-                                    <Text allowFontScaling={false} style={styles.text4}>{deliveryTime} mins</Text>
+                                    <Text allowFontScaling={false} style={styles.text4}>{deliveryTime.toFixed(0)} mins</Text>
                                 </View>
 
 
                                 <View style={styles.textView2}>
                                     <MaterialIcons name="motorcycle" size={24} color="grey" />
-                                    <Text allowFontScaling={false} style={styles.text4}>Deliver to Ebenezer</Text>
+                                    <Text allowFontScaling={false} style={styles.text4}>Agent: {agentfirstname} {agentlastname} </Text>
                                 </View>
 
 
@@ -238,7 +255,7 @@ useEffect(() => {
 
                                 </View>
 
-                                <Text allowFontScaling={false} style={styles.text2e}>KES {totalAmount}</Text>
+                                <Text allowFontScaling={false} style={styles.text2e}>KES {totalAmount.toFixed(2)}</Text>
                             </View>
 
 
@@ -250,7 +267,7 @@ useEffect(() => {
                                     {isConfirmed ? 
                                     <TouchableOpacity onPress={handlePayment}>
                                         <Text allowFontScaling={false} style={styles.text2c}>
-                                            {delivered ? "Proceed to payment": "Please wait for your order..."}
+                                            Recieve Your Order and Proceed To Payment
                                         </Text>
                                     </TouchableOpacity>:
                                     <TouchableOpacity onPress={handleUpdate}>
@@ -314,7 +331,7 @@ const styles = StyleSheet.create({
     orderDetails: {
         padding: 10,
         justifyContent: 'space-between',
-        height: '60%'
+        height: 'auto'
     },
 
     title1: {
@@ -462,6 +479,7 @@ const styles = StyleSheet.create({
         shadowColor: 'white',
      //   height: Dimensions.get('window').height * 0.7,
         borderRadius: 15,
+        height: "auto"
         
     },
 

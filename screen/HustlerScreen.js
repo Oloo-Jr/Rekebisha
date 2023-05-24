@@ -110,7 +110,7 @@ const HustlerScreen = ({ navigation }) => {
                                         </View>
 
                                         <View style={styles.textView}>
-                                            <BodyText style={styles.text}>DotDot: Fuel made easier</BodyText>
+                                            <BodyText style={styles.text}>DotDot: Fuel made cheaper</BodyText>
 
                                         </View>
 
