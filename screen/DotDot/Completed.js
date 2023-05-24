@@ -9,7 +9,7 @@ import BodyText from '../../components/BodyText'
 import TitleText from '../../components/TitleText';
 import QuoteTable from '../../components/QuoteTable';
 import { QUOTE } from '../../data/services';
-import PaymentIcon from '@mui/icons-material/Payment';
+
 
 const CompletedScreen = ({ navigation }) => {
 

@@ -54,7 +54,9 @@ const DotDotScreen = ({ navigation }) => {
   }, []);
 
   const renderOfferItem = ({ item }) => (
-  
+   
+    <View style={{  width: '100%', paddingHorizontal: 10 }}>
+   <TouchableOpacity onPress={() => { navigation.navigate("") }}>
             <Card  style={styles.offerProduct}>
             <ImageBackground
                 source={{uri: item.ImgUrl}}
@@ -67,7 +69,7 @@ const DotDotScreen = ({ navigation }) => {
                     <TitleText style={styles.subText}>{item.Name}</TitleText>
 
                     <View style={styles.priceView}>
-                        <Text allowFontScaling={false} style={styles.offerText1}>KES {item.Price}</Text>
+                        <Text allowFontScaling={false} style={styles.offerText1}>KEs {item.Price}</Text>
 
                     </View>
                 </View>
@@ -76,6 +78,10 @@ const DotDotScreen = ({ navigation }) => {
             </ImageBackground>
 
         </Card>
+        </TouchableOpacity>
+        </View>
+
+       
   );
 
     const renderItem = ({ item }) => (
@@ -218,23 +224,24 @@ const DotDotScreen = ({ navigation }) => {
                 <View style={styles.offer}>
                     <TitleText style={styles.offerText}>Best Offers Today</TitleText>
                     {/*FlatList*/}
+
+                    <View style={styles.offerslist}>
                     <FlatList 
                     data={allofferproducts}
-                    onRefresh={getOfferProducts}
-                    refreshing={refreshing}
-                    horizontal
+                    contentContainerStyle={{ width: '100%' }}
+                    horizontal={true}
                     showsHorizontalScrollIndicator={true}
                     style={{
-                    paddingHorizontal: 20,
+                    paddingHorizontal: 10,
                     marginBottom:10,
-                    marginRight: 50,
-                    width:'auto',
+                   // marginRight: 50,
+                  //  width:'auto',
                    
                     }}
                     renderItem={renderOfferItem} 
                     />
 
-                    
+</View>  
 
                 </View>
 
@@ -283,6 +290,11 @@ const styles = StyleSheet.create({
 
         // alignItems: 'center',
         justifyContent: 'space-around'
+    },
+
+    offerslist: {
+        flex: 1,
+        width: '100%'
     },
 
     searchButton: {
@@ -464,9 +476,10 @@ const styles = StyleSheet.create({
 
     offer: {
         height: Dimensions.get('window').height * 0.20,
-        width: Dimensions.get('window').width * 1,
-        paddingLeft: 20,
+       // width: Dimensions.get('window').width * 1,
+       // paddingLeft: 20,
         backgroundColor: 'rgba(255, 255, 255, 0.6)',
+      //  flexDirection: 'row'
         
     },
 
