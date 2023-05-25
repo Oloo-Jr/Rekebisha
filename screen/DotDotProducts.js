@@ -9,6 +9,10 @@ import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText';
 import { TextInput } from 'react-native-gesture-handler';
 import { db } from '../Database/config';
+import Carousel from 'react-native-reanimated-carousel';
+
+
+
 const DotDotScreen = ({ navigation }) => {
 
     const [Category, setCategory] = useState("FuelTreatment");
@@ -226,39 +230,47 @@ const DotDotScreen = ({ navigation }) => {
                     {/*FlatList*/}
 
                     <View style={styles.offerslist}>
-                    <FlatList 
-                    data={allofferproducts}
-                    contentContainerStyle={{ width: '100%' }}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={true}
-                    style={{
-                    paddingHorizontal: 10,
-                    marginBottom:10,
-                   // marginRight: 50,
-                  //  width:'auto',
                    
-                    }}
-                    renderItem={renderOfferItem} 
-                    />
+
+
+
+<Carousel
+                loop
+                width={Dimensions.get('window').width}
+                height={'auto'}
+                autoPlay={true}
+                data={allofferproducts}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) => console.log('current index:', index)}
+                renderItem={renderOfferItem} 
+            />
+
+
+
+                    
 
 </View>  
 
                 </View>
 
                 {/*Flatlist*/}
+
+
+                <View style={{ flex: 1, alignItems: 'center', width:Dimensions.get('window').width * 1,  }}>
                 <FlatList 
                     data={allproducts}
                     onRefresh={getProducts}
                     refreshing={refreshing}
                     showsVerticalScrollIndicator={false}
                     style={{
-                    paddingVertical: 20
+                    paddingVertical: 20,
                     }}
                     renderItem={renderItem} 
+                    numColumns={2}
                     />
 
 
-
+</View>
 
 
 
@@ -485,9 +497,10 @@ const styles = StyleSheet.create({
 
     fastFoods: {
         height: "auto",
-        width: Dimensions.get('window').width * 9,
-        paddingLeft: 40,
-        marginBottom: 30,
+        width: Dimensions.get('window').width * 0.48,
+        paddingHorizontal:5
+      //  paddingLeft: 40,
+        //marginBottom: 30,
         
         //  backgroundColor: 'rgba(255, 255, 255, 0.6)'
     },
@@ -502,7 +515,7 @@ const styles = StyleSheet.create({
     Product: {
 
         height:230,
-        width: 300,
+        width: '100%',
         
         overflow: 'hidden',
     },
