@@ -118,8 +118,8 @@ const DotDotScreen = ({ navigation }) => {
 
 
                             <View style={styles.BuyView}>
-                            <TitleText style={styles.prodName}>Name: {item.Name}</TitleText>
-                                <TitleText style={styles.prodName}>Quantity: {item.Quantity}</TitleText>
+                            <TitleText style={styles.prodName}> {item.Name}</TitleText>
+                                <TitleText style={styles.prodName}> {item.Quantity}</TitleText>
                                 
                                 <TitleText style={styles.prodName}>{item.Price}</TitleText>
 
@@ -198,7 +198,7 @@ const DotDotScreen = ({ navigation }) => {
 
                             </View>
 
-                            <TitleText style={styles.subText}>Back</TitleText>
+                            <TitleText style={styles.subText}>Leave</TitleText>
                         </View>
 
 
@@ -256,7 +256,12 @@ const DotDotScreen = ({ navigation }) => {
                 {/*Flatlist*/}
 
 
-                <View style={{ flex: 1, alignItems: 'center', width:Dimensions.get('window').width * 1,  }}>
+                <View style={{ flex: 1, alignItems: 'center', width: Dimensions.get('window').width * 1,  }}>
+
+
+
+
+                    
                 <FlatList 
                     data={allproducts}
                     onRefresh={getProducts}
@@ -321,8 +326,9 @@ const styles = StyleSheet.create({
 
 
     image: {
-        height: Dimensions.get('window').width * 0.08,
-        width: Dimensions.get('window').width * 0.08,
+        height: '100%',
+        width: '100%',
+       // resizeMode: 'contain'
 
     },
 
@@ -335,11 +341,11 @@ const styles = StyleSheet.create({
     imageView: {
         //flex: 1,
         backgroundColor: '#17304A',
-        alignItems: 'center',
-        justifyContent: 'center',
+        //alignItems: 'center',
+       // justifyContent: 'center',
         //  paddingLeft: '40%',
-        height: Dimensions.get('window').width * 0.24,
-        width: Dimensions.get('window').width * 0.24,
+       height: '100%',
+        width: '100%',
         //borderRadius: 20,
 
 
@@ -375,7 +381,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Lexend-light',
 
         color: 'black',
-        fontSize: 15,
+        fontSize: 13.5,
     
     },
 
@@ -398,7 +404,7 @@ const styles = StyleSheet.create({
     icons: {
         position: 'absolute',
         top: 50,
-        height: '13%',
+        height: '16%',
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -412,7 +418,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Lexend-light',
         fontWeight: 'bold',
         color: 'grey',
-        fontSize: 15,
+        fontSize: 12.5,
         padding: 2
     },
 
@@ -478,7 +484,7 @@ const styles = StyleSheet.create({
 
     prodImageView: {
         width: '100%',
-        height: '60%',
+        height: '65%',
 
         alignItems: 'center',
         justifyContent: 'center',
@@ -487,11 +493,12 @@ const styles = StyleSheet.create({
     },
 
     offer: {
-        height: Dimensions.get('window').height * 0.20,
+        height: Dimensions.get('window').height * 0.21,
        // width: Dimensions.get('window').width * 1,
        // paddingLeft: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
-      //  flexDirection: 'row'
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      //  flexDirection: 'row',
+      paddingBottom: 10
         
     },
 
@@ -538,7 +545,7 @@ const styles = StyleSheet.create({
 
 
     banner: {
-        height: Dimensions.get('window').height * 0.25,
+        height: Dimensions.get('window').height * 0.18,
         width: Dimensions.get('window').width * 1,
         borderBottomLeftRadius: 50
     },
@@ -547,14 +554,14 @@ const styles = StyleSheet.create({
         fontFamily: 'Lexend-bold',
         fontWeight: 'bold',
         color: 'white',
-        fontSize: 30
+        fontSize: 25
     },
 
     offerText: {
         fontFamily: 'Lexend-bold',
         fontWeight: 'bold',
         color: 'white',
-        fontSize: 20,
+        fontSize: 17,
         paddingBottom: 5
 
     },
@@ -563,21 +570,21 @@ const styles = StyleSheet.create({
         fontFamily: 'Lexend-bold',
         fontWeight: 'bold',
         color: 'white',
-        fontSize: 17
+        fontSize: 16
     },
 
     subText: {
         fontFamily: 'Lexend-light',
         fontWeight: 'bold',
         color: 'white',
-        fontSize: 15,
+        fontSize: 14,
         padding: 2
     },
     subText1: {
         fontFamily: 'Lexend-lighter',
         fontWeight: 'bold',
         color: 'white',
-        fontSize: 13
+        fontSize: 12
     },
 
 
