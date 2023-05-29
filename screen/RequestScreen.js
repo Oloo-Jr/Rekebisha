@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, ImageBackground, FlatList, Text, TouchableOpacity } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
@@ -9,7 +9,15 @@ import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText';
 
 const HustlerScreen = ({ navigation }) => {
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+    const toggleDrawer = () => {
+      setIsDrawerOpen(!isDrawerOpen);
+    };
+  
+    const closeDrawer = () => {
+      setIsDrawerOpen(false);
+    };
 
 
 
@@ -25,7 +33,7 @@ const HustlerScreen = ({ navigation }) => {
                     name="menu"
                     //color = {colors.grey1}
                     size={35}
-                    onPress={() => { navigation.navigate("RequestScreen", { state: 0 }) }}
+                    onPress={toggleDrawer}
                 />
 
 
