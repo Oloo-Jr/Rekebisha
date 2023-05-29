@@ -42,6 +42,7 @@ const DotDotCart = ({ navigation, route }) => {
           setLocation(location);
           getUserDetails();
           getProductDetails();
+          getOfferProductDetails();
         })();
       }, []);
 
@@ -60,6 +61,22 @@ const DotDotCart = ({ navigation, route }) => {
         setImgUrl(ImgUrl);
     
   }
+  
+  const getOfferProductDetails = async () => {
+    const doc = await db.collection('DotDot Offer Products').doc(productId).get();
+    console.log(doc.data());
+    const Name = doc.data().Name;
+    const Quantity = doc.data().Quantity;
+    const Price = doc.data().Price;
+    const Category = doc.data().Category;
+    const ImgUrl = doc.data().ImgUrl;
+    setName(Name);
+    setQuantity(Quantity);
+    setPrice(Price);
+    setCategory(Category);
+    setImgUrl(ImgUrl);
+
+}
 
 
       const BuyDotDotProduct = async () => {

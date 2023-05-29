@@ -60,7 +60,8 @@ const DotDotScreen = ({ navigation }) => {
   const renderOfferItem = ({ item }) => (
    
     <View style={{  width: '100%', paddingHorizontal: 10 }}>
-   <TouchableOpacity onPress={() => { navigation.navigate("") }}>
+   <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
+                                        { productId: item.id}) }}>
             <Card  style={styles.offerProduct}>
             <ImageBackground
                 source={{uri: item.ImgUrl}}

@@ -57,7 +57,7 @@ useEffect(() => {
     return () => backHandler.remove();
   }, []);
   
-
+  
 
     const getOrderDetails = async () => {
        const doc = await db.collection('DotDotOrders').doc(currentOrderId).get();
