@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        height: Dimensions.get('window').height * 0.57,
+        height: Dimensions.get('window').height * 0.7,
 
     },
 
@@ -342,22 +342,27 @@ const styles = StyleSheet.create({
 
 
         zIndex: 30,
-        position: 'absolute',
-        bottom: 50,
+       // position: 'absolute',
+       // bottom: 50,
         width: Dimensions.get('window').width * 0.8,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
         height: 48,
+        margin: 12,
+        
+        padding: 10
+        
+      
 
     },
 
     login: {
 
 
-        zIndex: 30,
-        position: 'absolute',
-        bottom: 5,
+        //zIndex: 30,
+        //position: 'absolute',
+       // bottom: 5,
         width: Dimensions.get('window').width * 0.8,
         justifyContent: 'center',
         alignItems: 'center',

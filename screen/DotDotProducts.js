@@ -15,6 +15,25 @@ import Carousel from 'react-native-reanimated-carousel';
 
 const DotDotScreen = ({ navigation }) => {
 
+
+    const [bottomNavBarHeight, setBottomNavBarHeight] = useState(0);
+
+    useEffect(() => {
+      const getBottomNavBarHeight = () => {
+        const windowHeight = Dimensions.get('window').height;
+        const screenHeight = Dimensions.get('screen').height;
+  
+        // Calculate the height difference between the window and the screen
+        const heightDifference = screenHeight - windowHeight;
+  
+        // Set the bottom navigation bar height based on the difference
+        setBottomNavBarHeight(heightDifference);
+      };
+  
+      getBottomNavBarHeight();
+    }, []);
+
+
     const [Category, setCategory] = useState("FuelTreatment");
     const [allproducts, setallProducts] = useState([]);
     const [refreshing, setRefreshing] = useState(false)
@@ -90,7 +109,7 @@ const DotDotScreen = ({ navigation }) => {
 
     const renderItem = ({ item }) => (
         <View style={styles.fastFoods}>
-                    <TitleText style={styles.offerText}>     </TitleText>
+                  
 
 
 
@@ -256,7 +275,7 @@ const DotDotScreen = ({ navigation }) => {
                 {/*Flatlist*/}
 
 
-                <View style={{ flex: 1, alignItems: 'center', width: Dimensions.get('window').width * 1,  }}>
+                <View style={styles.flat}>
 
 
 
@@ -266,9 +285,9 @@ const DotDotScreen = ({ navigation }) => {
                     data={allproducts}
                     onRefresh={getProducts}
                     refreshing={refreshing}
-                    showsVerticalScrollIndicator={false}
+                   showsVerticalScrollIndicator={false}
                     style={{
-                    paddingVertical: 20,
+                   
                     }}
                     renderItem={renderItem} 
                     numColumns={2}
@@ -306,12 +325,21 @@ const styles = StyleSheet.create({
         flex: 1,
 
         // alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        height: Dimensions.get('window').height * 1
     },
 
     offerslist: {
         flex: 1,
         width: '100%'
+    },
+
+    flat: {
+         flex: 1,
+          alignItems: 'center',
+          height: 100 , 
+          width: Dimensions.get('window').width * 1,
+           //paddingBottom: 50
     },
 
     searchButton: {
@@ -493,21 +521,22 @@ const styles = StyleSheet.create({
     },
 
     offer: {
-        height: Dimensions.get('window').height * 0.21,
+        height: Dimensions.get('window').height * 0.20,
        // width: Dimensions.get('window').width * 1,
        // paddingLeft: 20,
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
       //  flexDirection: 'row',
-      paddingBottom: 10
+      paddingBottom: 5
         
     },
 
     fastFoods: {
-        height: "auto",
+    //   height: "auto",
         width: Dimensions.get('window').width * 0.48,
-        paddingHorizontal:5
+        paddingHorizontal:5,
       //  paddingLeft: 40,
-        //marginBottom: 30,
+      //  marginBottom: 10,
+        paddingBottom: 10
         
         //  backgroundColor: 'rgba(255, 255, 255, 0.6)'
     },
@@ -525,6 +554,7 @@ const styles = StyleSheet.create({
         width: '100%',
         
         overflow: 'hidden',
+        paddingBottom: 10
     },
 
 
@@ -545,7 +575,7 @@ const styles = StyleSheet.create({
 
 
     banner: {
-        height: Dimensions.get('window').height * 0.18,
+        height: Dimensions.get('window').height * 0.2,
         width: Dimensions.get('window').width * 1,
         borderBottomLeftRadius: 50
     },
