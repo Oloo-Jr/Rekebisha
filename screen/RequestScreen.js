@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, StyleSheet, Image, ImageBackground, FlatList, Text, TouchableOpacity } from 'react-native';
 import Card from '../components/card';
 import { Dimensions } from 'react-native';
@@ -9,16 +9,13 @@ import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText';
 
 const HustlerScreen = ({ navigation }) => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const drawerRef = useRef(null);
 
-    const toggleDrawer = () => {
-      setIsDrawerOpen(!isDrawerOpen);
-    };
-  
-    const closeDrawer = () => {
-      setIsDrawerOpen(false);
-    };
-
+  const toggleDrawer = () => {
+    if (drawerRef.current) {
+      drawerRef.current.openDrawer();
+    }
+  };
 
 
     return (
@@ -33,7 +30,7 @@ const HustlerScreen = ({ navigation }) => {
                     name="menu"
                     //color = {colors.grey1}
                     size={35}
-                    onPress={toggleDrawer}
+                    onPress ={ ( ) =>navigation.openDrawer()} 
                 />
 
 
@@ -48,7 +45,7 @@ const HustlerScreen = ({ navigation }) => {
                     name="account"
                     //color = {colors.grey1}
                     size={35}
-                    onPress={() => { navigation.navigate("RequestScreen", { state: 0 }) }}
+                    onPress={() => { navigation.navigate("HomeScreen", { state: 0 }) }}
                 />
 
 
@@ -129,6 +126,42 @@ const HustlerScreen = ({ navigation }) => {
 
 
                         </View>
+
+
+
+                        <View style={styles.list}>
+
+<TouchableOpacity onPress={() => { navigation.navigate("DotDotScreen", { state: 0 }) }}>
+    <View style={styles.vendorsView}>
+
+        <Card style={styles.imageCard}>
+
+            <View style={styles.imageView}>
+                <Image
+                    source={require('../assets/DotDotLogo.jpg')}
+                    style={styles.image}
+                // resizeMode="cover" 
+                />
+
+            </View>
+
+            <View style={styles.textView}>
+                <BodyText style={styles.text}>DotDot: Fuel made cheaper</BodyText>
+
+            </View>
+
+        </Card>
+
+    </View>
+</TouchableOpacity>
+
+
+
+
+
+
+
+</View>
 
                        
 
@@ -272,17 +305,17 @@ const styles = StyleSheet.create({
 
 
     image: {
-        //height: Dimensions.get('window').width * 0.25,
-        //  width: Dimensions.get('window').width * 0.25,
+        height: Dimensions.get('window').width * 0.25,
+         width: Dimensions.get('window').width * 0.25,
 
     },
 
 
-    image: {
-        height: Dimensions.get('window').width * 0.08,
-        width: Dimensions.get('window').width * 0.08,
+ //   image: {
+   //     height: Dimensions.get('window').width * 0.08,
+     //   width: Dimensions.get('window').width * 0.08,
 
-    },
+    // },
 
     imageView: {
         //flex: 1,
@@ -290,9 +323,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         //  paddingLeft: '40%',
-        height: Dimensions.get('window').width * 0.21,
-        width: Dimensions.get('window').width * 0.21,
+        height: Dimensions.get('window').width * 0.25,
+        width: Dimensions.get('window').width * 0.25,
         borderRadius: 120,
+        overflow: 'hidden'
 
 
     },

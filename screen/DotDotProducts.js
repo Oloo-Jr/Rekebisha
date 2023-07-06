@@ -93,7 +93,7 @@ const DotDotScreen = ({ navigation }) => {
                     <TitleText style={styles.subText}>{item.Name}</TitleText>
 
                     <View style={styles.priceView}>
-                        <Text allowFontScaling={false} style={styles.offerText1}>KEs {item.Price}</Text>
+                        <Text allowFontScaling={false} style={styles.offerText1}>Ksh {item.Price}</Text>
 
                     </View>
                 </View>
@@ -140,20 +140,32 @@ const DotDotScreen = ({ navigation }) => {
                             <View style={styles.BuyView}>
                             <TitleText style={styles.prodName}> {item.Name}</TitleText>
                                 <TitleText style={styles.prodName}> {item.Quantity}</TitleText>
-                                
-                                <TitleText style={styles.prodName}>{item.Price}</TitleText>
+                                <TitleText style={styles.prodName}> Ksh {item.Price}</TitleText>
+                               
 
 
 
 
-                                <View style={styles.addtocart}>
-                                    <View style={styles.buttonView}>
-                                        <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
+                                <TouchableOpacity onPress={() => { navigation.navigate("DotDotCart", 
                                         { productId: item.id}) }}>
-                                            <TitleText style={styles.prodName}>ADD TO CART</TitleText>
-                                        </TouchableOpacity>
+                                    <View style={styles.cartButtonView}>
+                                        
+                                            
+                                            <Icon type="material-community" 
+                                                         name = "cart"
+                                                         color = "white"
+                                                         size = {20}
+                                                         
+                                                          />
+                                                          
+
+                                                          
+                                            <TitleText style={styles.button}>ADD TO CART</TitleText>
+                                            
+                                        
                                     </View>
-                                </View>
+                                    </TouchableOpacity>
+                                
 
 
 
@@ -218,7 +230,7 @@ const DotDotScreen = ({ navigation }) => {
 
                             </View>
 
-                            <TitleText style={styles.subText}>Leave</TitleText>
+                            <TitleText style={styles.subText}>Exit</TitleText>
                         </View>
 
 
@@ -340,7 +352,7 @@ const styles = StyleSheet.create({
           alignItems: 'center',
           height: 100 , 
           width: Dimensions.get('window').width * 1,
-           //paddingBottom: 50
+           paddingTop: 10
     },
 
     searchButton: {
@@ -383,7 +395,9 @@ const styles = StyleSheet.create({
 
     buyView: {
         height: '40%',
-        backgroundColor: '#F5F2F0',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        padding: 5
+        
 
     },
     buttonText: {
@@ -393,40 +407,47 @@ const styles = StyleSheet.create({
     },
 
 
-    button: {
-        flex: 1,
-
-
-        //  width: Dimensions.get('window').width * 0.8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 0,
-        height: 30,
-        shadowOpacity: 0.2,
-        backgroundColor: '#8CC740'
-    },
+  
 
     prodName: {
         fontFamily: 'Lexend-light',
 
         color: 'black',
-        fontSize: 13.5,
+        fontSize: 14,
+    
+    },
+
+    button: {
+        fontFamily: 'Lexend-light',
+
+        color: 'white',
+        fontSize: 14,
     
     },
 
     buttonView: {
-
-
-        // zIndex: 30,
-        // position: 'absolute',
-        // bottom: 92,
-        width: '80%',
-        justifyContent: 'center',
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        // borderRadius: 100,
         height: 25,
         backgroundColor: '#8CC740',
-        borderRadius: 10
+        borderRadius: 5,
+        padding : 5
+
+    },
+
+
+    cartButtonView: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        
+        alignItems: 'center',
+        height: 25,
+        backgroundColor: '#8CC740',
+        borderRadius: 5,
+        padding : 5
 
     },
 
@@ -495,7 +516,7 @@ const styles = StyleSheet.create({
     sideView: {
         width: '65%',
         height: '100%',
-        backgroundColor: 'rgba(140, 199, 64, 0.3)',
+        backgroundColor: 'rgba(140, 199, 64, 0.8)',
         // alignItems: 'center',
         justifyContent: 'center',
         paddingLeft: 5
@@ -551,7 +572,7 @@ const styles = StyleSheet.create({
 
     Product: {
 
-        height:230,
+        height:240,
         width: '100%',
         
         overflow: 'hidden',
@@ -685,6 +706,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         //  position: 'absolute',
         // paddingTop: '10%'
+        padding:10
     },
 
 

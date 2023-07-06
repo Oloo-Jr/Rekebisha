@@ -14,13 +14,21 @@ export default function DrawerNavigator(){
                 name = "HomeStack"
                 component = {HomeStack}
                 options = {{
-                    title:"ACCOUNT",
+                  
+                    drawerLabel: 'Doe',
+                    drawerLabelStyle: {
+                     fontSize: 20,
+                     color: '#17304A',
+                     fontWeight: 'bold',
+                     fontFamily: 'Lexend-bold'
+                   },
                     drawerIcon : ({focused,size})=><Icon type="material-community" 
                                                          name = "account"
-                                                         color = {focused?'#7cc':colors.grey2}
-                                                         size = {100}
+                                                         color = "grey"
+                                                         size = {80}
                                                          
                                                           />,  
+                                                          
                      headerShown : false
                      
                 }}
@@ -30,10 +38,17 @@ export default function DrawerNavigator(){
                 name = "Wallet"
                 component = {HomeStack}
                 options = {{
-                    title:"Wallet",
+                  
+                    drawerLabel: 'Wallet',
+                    drawerLabelStyle: {
+                     fontSize: 15,
+                     color: '#17304A',
+                     fontWeight: 'bold',
+                     fontFamily: 'Lexend-bold'
+                   },
                     drawerIcon : ({focused,size})=><Icon type="material-community" 
-                                                         name = "home"
-                                                         color = {focused?'#7cc':colors.grey2}
+                                                         name = "wallet"
+                                                         color= "#17304A"
                                                          size = {size}
                                                          
                                                           />,  
@@ -47,10 +62,17 @@ export default function DrawerNavigator(){
                 name = "Support"
                 component = {HomeStack}
                 options = {{
-                    title:"Support",
+                  
+                    drawerLabel: 'Support',
+                    drawerLabelStyle: {
+                     fontSize: 15,
+                     color: '#17304A',
+                     fontWeight: 'bold',
+                     fontFamily: 'Lexend-bold'
+                   },
                     drawerIcon : ({focused,size})=><Icon type="material-community" 
-                                                         name = "home"
-                                                         color = {focused?'#7cc':colors.grey2}
+                                                         name = "face-agent"
+                                                         color= "#17304A"
                                                          size = {size}
                                                          
                                                           />,  
@@ -64,10 +86,17 @@ export default function DrawerNavigator(){
                 name = "About Us"
                 component = {HomeStack}
                 options = {{
-                    title:"About Us",
+                  
+                    drawerLabel: 'About Us',
+                    drawerLabelStyle: {
+                     fontSize: 15,
+                     color: '#17304A',
+                     fontWeight: 'bold',
+                     fontFamily: 'Lexend-bold'
+                   },
                     drawerIcon : ({focused,size})=><Icon type="material-community" 
-                                                         name = "home"
-                                                         color = {focused?'#7cc':colors.grey2}
+                                                         name = "information"
+                                                         color= "#17304A"
                                                          size = {size}
                                                          
                                                           />,  
@@ -75,6 +104,33 @@ export default function DrawerNavigator(){
                      
                 }}
                 onPress ={()=>{navigation.navigate("RequestScreen",{state:0})}}
+            />
+
+<Drawer.Screen
+                name = "Logout"
+                component = {HomeStack}
+                options = {{
+                  
+                   drawerLabel: 'Logout',
+                   drawerLabelStyle: {
+                    fontSize: 15,
+                    color: '#17304A',
+                    fontWeight: 'bold',
+                    fontFamily: 'Lexend-bold'
+                  },
+                   
+
+
+                    drawerIcon : ({focused,size})=><Icon type="material-community" 
+                                                         name = "logout"
+                                                         color= "#17304A"
+                                                         size = {size}
+                                                          />,  
+                     headerShown : false,
+                    screenName: 'My Home'
+                     
+                }}
+                onPress ={()=>{navigation.navigate("HomeScreen",{state:0})}}
             />
              
              

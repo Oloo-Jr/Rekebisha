@@ -95,29 +95,7 @@ const HustlerScreen = ({ navigation }) => {
                                 </View>
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() => { navigation.navigate("DotDotScreen", { state: 0 }) }}>
-                                <View style={styles.vendorsView}>
-
-                                    <Card style={styles.imageCard}>
-
-                                        <View style={styles.imageView}>
-                                            <Image
-                                                source={require('../assets/DotDotLogo.jpg')}
-                                                style={styles.image}
-                                            // resizeMode="cover" 
-                                            />
-
-                                        </View>
-
-                                        <View style={styles.textView}>
-                                            <BodyText style={styles.text}>DotDot: Fuel made cheaper</BodyText>
-
-                                        </View>
-
-                                    </Card>
-
-                                </View>
-                            </TouchableOpacity>
+                           
 
                         </View>
 
