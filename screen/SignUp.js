@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
 
 
         zIndex: 30,
-       // position: 'absolute',
+       
        // bottom: 50,
         width: Dimensions.get('window').width * 0.8,
         justifyContent: 'center',
