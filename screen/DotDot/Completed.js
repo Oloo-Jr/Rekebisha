@@ -13,6 +13,21 @@ import { QUOTE } from '../../data/services';
 
 const CompletedScreen = ({ navigation }) => {
 
+    const lipaNaMpesa = () =>{
+        const url = " https://tinypesa.com/api/v1/express/initialize";
+
+        fetch(url, {
+            body: "amount=50&msisdn=0700600679&account_no=DotDot",
+            headers: {
+                Apikey: "QHEI2V9DYSV",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            method: "POST",
+        });
+
+    }
+    
+      
 
     const renderQuoteItem = itemData => {
         return (
@@ -31,7 +46,7 @@ const CompletedScreen = ({ navigation }) => {
     }
  
     const MpesaAlert = () =>
-    Alert.alert('Pay with Mpesa', 'Till No: 1234567890', [
+    Alert.alert('M-pesa: Buy Goods & Services', 'Till No: 1234567890', [
       {text: 'OK', onPress: () => console.log('OK Pressed')},
     ]);
 
@@ -63,7 +78,7 @@ return (
 
                 <Card style={styles.card}>
                     <View style={styles.textView}>
-                        <TitleText style={styles.Text}>Delivery Complete</TitleText>
+                        <TitleText style={styles.Text}>Your Order Has Arrived!!</TitleText>
 
                     </View>
                  <View style={styles.imageView}>

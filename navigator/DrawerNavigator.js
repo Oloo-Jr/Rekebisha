@@ -3,25 +3,65 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { HomeStack } from './StackNavigator'
 import { Icon } from 'react-native-elements'
 import { colors } from '../global/styles'
+import { auth, db } from '../Database/config'
+import { View,Text, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+
 
 
 const Drawer = createDrawerNavigator()
 
 export default function DrawerNavigator(){
+
+    const [userDisplayName, setUserDisplayName] = React.useState("");
+    const [userPhoneNumber, setUserPhoneNumber] = React.useState("");
+
+    const navigation = useNavigation();
+
+    const handleSignOut = () => {
+        auth
+        .signOut()
+        .then(() => {
+            navigation.navigate('SignUpScreen')
+        })
+        .catch(error => alert(error.message))
+      }
+
+      const getUserDetails = async () => {
+        const doc = await db.collection('users').doc(auth.currentUser.uid).get();
+        console.log(doc.data());
+        const username = doc.data().username;
+        const phoneNumber = doc.data().phonenumber;
+        setUserDisplayName(username);
+        setUserPhoneNumber(phoneNumber);
+
+    }
+
+    React.useEffect(() => {
+     getUserDetails();
+    }, []);
+    
+
     return(
         <Drawer.Navigator  useLegacyImplementation={true}>
             <Drawer.Screen
                 name = "HomeStack"
                 component = {HomeStack}
                 options = {{
-                  
-                    drawerLabel: 'Doe',
-                    drawerLabelStyle: {
+                     drawerLabelStyle: {
                      fontSize: 20,
                      color: '#17304A',
                      fontWeight: 'bold',
                      fontFamily: 'Lexend-bold'
                    },
+                   drawerLabel: () => (
+                    <View>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+                        {userDisplayName}
+                      </Text>
+                      <Text>{userPhoneNumber}</Text>
+                    </View>
+                  ),
                     drawerIcon : ({focused,size})=><Icon type="material-community" 
                                                          name = "account"
                                                          color = "grey"
@@ -39,7 +79,7 @@ export default function DrawerNavigator(){
                 component = {HomeStack}
                 options = {{
                   
-                    drawerLabel: 'Wallet',
+                    drawerLabel: 'Orders',
                     drawerLabelStyle: {
                      fontSize: 15,
                      color: '#17304A',
@@ -110,8 +150,13 @@ export default function DrawerNavigator(){
                 name = "Logout"
                 component = {HomeStack}
                 options = {{
-                  
-                   drawerLabel: 'Logout',
+                  drawerLabel: () => (
+                    <TouchableOpacity onPress={handleSignOut}>
+                      <Text style={{ fontSize: 15, fontWeight: 'bold', marginBottom: 10 }}>
+                        Logout
+                      </Text>
+                    </TouchableOpacity>
+                  ),
                    drawerLabelStyle: {
                     fontSize: 15,
                     color: '#17304A',
@@ -130,7 +175,7 @@ export default function DrawerNavigator(){
                     screenName: 'My Home'
                      
                 }}
-                onPress ={()=>{navigation.navigate("HomeScreen",{state:0})}}
+                onPress ={handleSignOut}
             />
              
              

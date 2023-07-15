@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput, ImageBackground, Image, BackHandler } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, TextInput,Platform, ImageBackground,ActivityIndicator, Image, BackHandler } from 'react-native';
 import Card from '../../components/card';
 import { Dimensions } from 'react-native';
 import TitleText from '../../components/TitleText';
@@ -9,6 +9,8 @@ import SubText from '../../components/SubText';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import { db } from '../../Database/config'
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
 
 const DotDotCheckout = ({ navigation, route }) => {
@@ -31,6 +33,10 @@ const DotDotCheckout = ({ navigation, route }) => {
     const [distance, setDistance] = useState(0);
     const [buyerlatitude, setBuyerLatitude] = useState("");
     const [buyerlongitude, setBuyerLongitude] = useState("");
+    const [showCancelButton, setShowCancelButton] = useState(true);
+    const [showConfirmbutton, setShowConfirmbutton] = useState(true);
+    const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+
 
 
     
@@ -58,6 +64,65 @@ useEffect(() => {
   }, []);
   
   
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
+  const sendPushNotification = async () => {
+    const notification = {
+      title: "Your Order has Arrived",
+      body: "Complete Payment and Pick your Order",
+    };
+  
+    await Notifications.scheduleNotificationAsync({
+      content: notification,
+      trigger: null,
+    });
+  };
+  
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+    
+    const itemRef = db.collection('DotDotOrders').doc(currentOrderId);
+    const unsubscribe = itemRef.onSnapshot((doc) => {
+      if (doc.exists) {
+        const selectedOrderData = doc.data();
+        if (selectedOrderData.Destination === 'Arrived') {
+            sendPushNotification();
+          navigation.navigate('CompletedScreen', {currentOrderId})
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [currentOrderId, navigation]);
 
     const getOrderDetails = async () => {
        const doc = await db.collection('DotDotOrders').doc(currentOrderId).get();
@@ -107,8 +172,21 @@ useEffect(() => {
         db.collection('DotDotOrders').doc(currentOrderId).update({
            status: "Pending Payment"
          });
-
+         setShowCancelButton(false);
+         setShowConfirmbutton(false);
+         setShowActivityIndicator(true);
          setIsConfirmed(true);
+ 
+       };
+
+       const handleCancel = () => {
+        
+        db.collection('DotDotOrders').doc(currentOrderId).update({
+           status: "Order Cncelled"
+           
+         });
+         navigation.navigate("HomeScreen")
+         
  
        };
 
@@ -171,7 +249,7 @@ useEffect(() => {
 
                                 </View>
 
-                                <Text allowFontScaling={false} style={styles.text2}>KES {productPrice}</Text>
+                                <Text allowFontScaling={false} style={styles.text2}>KES {totalAmount.toFixed(2)}</Text>
                             </View>
 
 
@@ -261,23 +339,36 @@ useEffect(() => {
 
 
                             <View style={styles.buttonView}>
-
-
+                           
+                                
+                                {showConfirmbutton &&
                                 <Card style={styles.acceptButton}>
-                                    {isConfirmed ? 
-                                    <TouchableOpacity onPress={handlePayment}>
-                                        <Text allowFontScaling={false} style={styles.text2c}>
-                                            Recieve Your Order and Proceed To Payment
-                                        </Text>
-                                    </TouchableOpacity>:
                                     <TouchableOpacity onPress={handleUpdate}>
                                     <Text allowFontScaling={false} style={styles.text2c}>
                                             Confirm Order
                                         </Text>
                                     </TouchableOpacity>
-                                    }
-                                    
                                 </Card>
+                                }
+                                                             
+                                {showCancelButton && 
+                                    <Card style={styles.acceptButton}>                              
+                                    <TouchableOpacity onPress={handleCancel}>
+                                        <Text allowFontScaling={false} style={styles.text2c}>
+                                            Cancel Order
+                                        </Text>
+                                    </TouchableOpacity>
+                                    </Card>
+                                }
+
+                                {showActivityIndicator && (
+                                    <View>
+                                    <ActivityIndicator size="large" color="#0000ff" />
+                                    <Text>Your order is on its' way!!</Text>
+                                    <Text>Please be patient. Thank you.</Text>
+                                    </View>
+                                )}
+                                
 
                             </View>
 
@@ -556,7 +647,7 @@ const styles = StyleSheet.create({
     },
 
     acceptButton: {
-        //  flex: 1,
+     flex: 1,
 
         //paddingHorizontal: 20,
         width: '90%',
@@ -566,6 +657,7 @@ const styles = StyleSheet.create({
         height: 32,
         shadowOpacity: 0.2,
         backgroundColor: '#8CC740',
+        margin: 5
     },
 
     callButton: {

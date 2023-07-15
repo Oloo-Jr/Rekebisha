@@ -29,7 +29,15 @@ const DotDotCart = ({ navigation, route }) => {
     const [price, setPrice] = useState(0);
     const [category, setCategory] = useState("");
     const [imgUrl, setImgUrl] = useState("");
+    const [count, setCount] = useState(1);
 
+    const onCounterChange = (newCount) => {
+      setCount(newCount);
+      
+      // You can also perform any other desired actions based on the new count value
+    };
+    
+    const totalPrice = count * price
 
     useEffect(() => {
         (async () => {
@@ -90,7 +98,8 @@ const DotDotCart = ({ navigation, route }) => {
             await db.collection("DotDotOrders").doc(currentOrderId).set({
                 userDisplayName,
                 quantity,
-                price,
+                price:totalPrice,
+                count,
                 longitude,
                 latitude,
                 userPhoneNumber,
@@ -233,7 +242,7 @@ const DotDotCart = ({ navigation, route }) => {
                                    
                                 </View>
 
-                                <Text allowFontScaling={false} style={styles.text42}>7 ml bottle</Text>
+                                <Text allowFontScaling={false} style={styles.text42}>{quantity}</Text>
 
 
                             </View>
@@ -259,7 +268,7 @@ const DotDotCart = ({ navigation, route }) => {
 
                                     {/* <Text  style={styles.text42}>Quantity</Text>*/}
                                 </View>
-                                <Text allowFontScaling={false} style={styles.text42}>10 minutes</Text>
+                                <Text allowFontScaling={false} style={styles.text42}>15-30 minutes</Text>
 
                             </View>
                            
@@ -285,7 +294,7 @@ const DotDotCart = ({ navigation, route }) => {
                                     {/* <Text  style={styles.text42}>Quantity</Text>*/}
                                 </View>
 
-                                <Counter start={1}/>
+                                <Counter start={1} onChange={onCounterChange}/>
                             </View>
                             </View>
                             </View>
@@ -294,7 +303,7 @@ const DotDotCart = ({ navigation, route }) => {
                             <View style={styles.textView}>
 
                                 <Text allowFontScaling={false} style={styles.text2d2}>Total</Text>
-                                <Text allowFontScaling={false} style={styles.text2e2}>Ksh {price}</Text>
+                                <Text allowFontScaling={false} style={styles.text2e2}>Ksh {totalPrice}</Text>
                             </View>
 
 
